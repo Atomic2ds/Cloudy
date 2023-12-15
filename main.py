@@ -166,6 +166,5 @@ async def load():
       await bot.load_extension(f'cogs.{file[:-3]}')
     
 
-global loading_start_time; loading_start_time = perf_counter()
 # Initialize Bot
 asyncio.run(main())
