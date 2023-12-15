@@ -287,7 +287,7 @@ class requestedby(discord.ui.View):
    def __init__(self, user: discord.User):
       super().__init__()
       self.user = user
-      self.add_item(discord.ui.Button(label=f"Run by {self.user.name.capitalize()}",style=discord.ButtonStyle.gray, disabled=True))
+      self.add_item(discord.ui.Button(label=f"Requested by {self.user.name.capitalize()}",style=discord.ButtonStyle.gray, disabled=True))
 
 async def delete_story(interaction, name, db, bot=config.bot):
      await interaction.response.defer()
