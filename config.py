@@ -18,10 +18,11 @@ class BotClient(commands.Bot):
         super().__init__(command_prefix=commands.when_mentioned_or(">"), intents=intents)
     async def setup_hook(self) -> None:
         from cogs.facts import factview
-        from views.ows import compileview
+        from views.ows import compileview, storiesview
         self.add_view(helpoverview())
         self.add_view(factview(None))
         self.add_view(compileview())
+        self.add_view(storiesview())
 
 bot = BotClient()
 

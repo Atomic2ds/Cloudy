@@ -15,7 +15,6 @@ class publish_story_modal(ui.Modal, title="Publish Story"):
 class compileview(discord.ui.View):
   def __init__(self):
      super().__init__(timeout=None)
-     #self.add_item(discord.ui.Button(label=f"Requested by {self.username}",style=discord.ButtonStyle.gray, custom_id="balls", disabled=True))
 
   @discord.ui.button(label="Publish Story", style=discord.ButtonStyle.gray, custom_id="publish_story", emoji="📪")
   async def publishstory(self, interaction: discord.Interaction, button: discord.ui.Button):
@@ -26,10 +25,11 @@ class compileview(discord.ui.View):
     from cogs.ows import db
     await reset_ows(interaction, db)
 
+
+
 class storiesview(discord.ui.View):
   def __init__(self):
      super().__init__(timeout=None)
-     #self.add_item(discord.ui.Button(label=f"Requested by {self.username}",style=discord.ButtonStyle.gray, custom_id="balls", disabled=True))\
 
 
   @discord.ui.button(label="Delete Story", style=discord.ButtonStyle.gray, custom_id="delete_story", emoji="🗑️")
@@ -40,6 +40,8 @@ class storiesview(discord.ui.View):
   async def readstory(self, interaction: discord.Interaction, button: discord.ui.Button):
      await interaction.response.send_modal(read_story_modal())
   
+
+
 
 class delete_story_modal(ui.Modal, title="Delete Story"):
     story_name = ui.TextInput(label="Name of the story", placeholder="The name of the story you want to delete", style=discord.TextStyle.short, required=True)
