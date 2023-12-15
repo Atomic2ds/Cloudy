@@ -98,10 +98,10 @@ def embedutil(category, content):
         embed.add_field(inline=False,name="Answer",value=f"{random.choice(eight_ball_answers)}")
 
     if category == "invite":
-        embed = discord.Embed(colour=0x4c7fff, description=f"Click the button below to invite Donald bot to your own discord server!", title="Invite Link")
+        embed = discord.Embed(colour=0x4c7fff, description=f"Click the button below to invite Cloudy bot to your own discord server!", title="Invite Link")
 
     if category == "vote":
-        embed = discord.Embed(colour=0x4c7fff, description=f"Click the button below to vote for donald on top.gg and make it easier for more people to find us!", title="Vote Link")
+        embed = discord.Embed(colour=0x4c7fff, description=f"Click the button below to vote for Cloudy on top.gg and make it easier for more people to find us!", title="Vote Link")
 
     if category == "gif":
         embed = discord.Embed(colour=0x4c7fff, title=content[1],description=content[0])
@@ -113,7 +113,7 @@ def embedutil(category, content):
             embed = discord.Embed(colour=0x4c7fff, description=f"Pong! Connnections take {round(bot.latency * 1000)}ms")
 
         elif content == "about":
-            embed = discord.Embed(colour=0x4c7fff, description="We are a small and upcoming discord bot designing and building useful and uniuqe features, our end goal is to make a discord bot everyone will enjoy.",title="About Donald Duck")
+            embed = discord.Embed(colour=0x4c7fff, description="We built cloudy so that server owners could easily add fun and cool features to their server without compromising on simplicity. Cloudy is made to be fast and responsive while being packed with cool and unique features",title="About Cloudy Bot")
             embed.add_field(name="Social Links",value=libraries.SOCIAL_LINKS,inline=False)
 
     if category == "warning":
@@ -133,7 +133,7 @@ def embedutil(category, content):
     
     if category == "help":
         if content == "overview":
-            embed = discord.Embed(colour=0x4c7fff,title="Modules on Donald",description="Welcome to Donald, below are commands you can play with!")
+            embed = discord.Embed(colour=0x4c7fff,title="Modules on Cloudy",description="Welcome to Cloudy, below are commands and modules you can play with!")
             embed.add_field(name="Core commands", value="Commands about the bot, like about the ping, the bots ping, stuff like that")
             embed.add_field(name="Fun commands", value="Play around with things like memes from reddit, gifs and the magic 8 ball")
             embed.add_field(name="Duck commands", value="Its in the name, commands centered entirely around ducks because we love ducks")
@@ -190,7 +190,7 @@ def embedutil(category, content):
             embed.add_field(name="/ows read", value="Read a story from your servers story library, anyone can use this")
             embed.add_field(name="/ows reset", value="Reset the story on your server, see the next command as a better way of handling this")
             embed.add_field(name="/ows compile", value="Turn the list of words from your story into a nice readable paragraph")
-            embed.add_field(name="/ows import", value="Import all of your ows data from Cloudy, and disable the cloudy config")
+            embed.add_field(name="/ows delete", value="Delete a story from your servers story library")
 
         elif content == "image":
             embed = discord.Embed(colour=0x4c7fff,title="Image commands",description="Run and manaage your own text to image channel in your server")
@@ -202,6 +202,15 @@ def embedutil(category, content):
         embed = discord.Embed(colour=0x4c7fff, title="Random Meme")
         embed.set_image(url=content[0])
         embed.set_footer(text=f"Fetched from r/{content[1]}")
+
+    elif category == "welcome":
+        if content == "message":
+          embed = discord.Embed(title="Cloudy Bot",colour=0x4c7fff,description="Below you can see basic tutorials on how to setup some of our features")
+          embed.add_field(name="<a:6449spellbook:1180515817037774908> One word stories",value="A feature rich system for making one word stories with your server members, fast and responsive with things like publishing, compiling, purging, invalid character detection and more. Get started with </ows channel:1097919110249185390>",inline=False)
+          embed.add_field(name="<:3205peepofriends:1180514883368923276> Group chat mode", value="If your server is intented just as a simple server with you and your friends, you can enable the group chat module with </gc enable:1162952783104843846> which lets all users change the server icon and name like a group chat",inline=False)
+          embed.add_field(name="<:Nintendo64Controller:1180515154161578035> Game server linker", value="This feature uses the Pterodactyl API to let you connect your game servers to your discord community and let your members view the stats of your game servers easily, get started with </server add:1162767334990151741> and </status:1162767334990151740>", inline=False)
+          embed.add_field(name="Social Links",value="[Invite Link](https://top.gg/bot/1090917174991933540/invite)・[Support Server](https://discord.gg/DUFfRvBXnk)・[Documentation](https://docs.cloudybot.xyz)",inline=False)
+          em = embed
 
     return embed
 

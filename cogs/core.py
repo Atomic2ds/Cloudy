@@ -14,6 +14,7 @@ import config
 from embeds import embedutil
 import aiohttp
 from views.core import inviteview, voteview
+from functions import infoview
 
 class core(commands.Cog):
     
@@ -26,7 +27,7 @@ class core(commands.Cog):
         print("┃  Loaded the Core Cog           ┃")
         print("┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛")
 
-    @app_commands.command(name="help",description="View all commands on the donald bot")
+    @app_commands.command(name="help",description="View all commands on the Cloudy Bot")
     @app_commands.choices(type=[
       Choice(name="Core commands", value="core"),
       Choice(name="Fun commands", value="fun"),
@@ -65,7 +66,7 @@ class core(commands.Cog):
      except Exception:
         await interaction.followup.send(embed=embedutil("error",traceback.format_exc()))
 
-    @app_commands.command(name="about",description="View basic information about the Donald bot")
+    @app_commands.command(name="about",description="View basic information about the Cloudy Bot")
     async def about(self, interaction: discord.Interaction):
      try:
         await interaction.response.defer()

@@ -13,6 +13,7 @@ import requests
 import config
 import aiohttp
 from embeds import embedutil
+from functions import fetch_gif, infoview
 
 from PIL import Image
 from io import BytesIO
@@ -41,29 +42,8 @@ class fun(commands.Cog):
     @app_commands.describe(query="Send a custom query to the Gif API")
     async def gif_slash(self, interaction: discord.Interaction, query: Optional[str]):
       await interaction.response.defer()
-      if query == None:
-        try:
-          session = aiohttp.ClientSession()
-          response = await session.get(f'https://api.giphy.com/v1/gifs/random?api_key={config.GIPHY_KEY}')
-          data = json.loads(await response.text())
-          await session.close()
-          await interaction.followup.send(embed=embedutil("gif",(None,"Random Gif",data['data']['images']['original']['url'])))
-        except Exception as e:
-          await session.close()
-          await interaction.followup.send(embed=embedutil("error",traceback.format_exc())) 
-      else:
-        try:
-          search = query
-          session = aiohttp.ClientSession()
-          search.replace(' ', '+')
-          response = await session.get('http://api.giphy.com/v1/gifs/search?q=' + search + f'&api_key={config.GIPHY_KEY}')
-          data = json.loads(await response.text())
-          gif_choice = random.randint(0, 9)
-          await session.close()
-          await interaction.followup.send(embed=embedutil("gif",(query,"Custom Gif",data['data'][gif_choice]['images']['original']['url'])))
-        except Exception as e:
-          await session.close()
-          await interaction.followup.send(embed=embedutil("error",traceback.format_exc()))
+      embed = await fetch_gif(query)
+      await interaction.followup.send(embed=embed)
 
     @app_commands.command(name="meme", description="Get a Random Meme from Reddit")
     @app_commands.describe(subreddit="Which subreddit to grab the meme from")
@@ -130,17 +110,16 @@ class fun(commands.Cog):
 
         # Upload the file to Discord
         file = discord.File(result_path)
-        channel = self.bot.get_channel(1183413750557065287)
-        message = await channel.send(file=file)
+        #channel = self.bot.get_channel(1183413750557065287)
 
         # Get the URL of the uploaded file
-        file_url = message.attachments[0].url
+        #file_url = message.attachments[0].url
 
         # Now you can use file_url in your embed
-        embed = discord.Embed(title="Image Template", color=0x4c7fff)
-        embed.set_image(url=file_url)
-        embed.set_footer(text=f"Template: {type.capitalize()}")
-        await interaction.followup.send(embed=embed)
+        #embed = discord.Embed(title="Image Template", color=0x4c7fff)
+        #embed.set_image(url=file_url)
+        #embed.set_footer(text=f"Template: {type.capitalize()}")
+        await interaction.followup.send(file=file,view=infoview(f"User: {user.name.capitalize()}"))
 
       except Exception:
         await interaction.followup.send(embed=embedutil("error", traceback.format_exc()))

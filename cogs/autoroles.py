@@ -141,7 +141,7 @@ class autoroles(commands.Cog):
              human_roles.append(" ")
           human_roles = "".join(human_roles)
 
-        embed = discord.Embed(color=0xFFB533, title=f"Autoroles in {interaction.guild.name}")  
+        embed = discord.Embed(color=0x4c7fff, title=f"Autoroles in {interaction.guild.name}")  
         embed.add_field(name="Bot Roles", value=bot_roles, inline=False)
         embed.add_field(name="Human Roles", value=human_roles, inline=False)
         embed.add_field(name="Social Links",value=libraries.SOCIAL_LINKS,inline=False)

@@ -42,9 +42,15 @@ class helpoverview(discord.ui.View):
 class inviteview(discord.ui.View):
    def __init__(self):
       super().__init__(timeout=None)
-      self.add_item(discord.ui.Button(label="Invite Donald!", url="https://donald.a3d.pro/invite"))
+      self.add_item(discord.ui.Button(label="Invite Cloudy!", url="https://cloudybot.xyz/invite"))
 
 class voteview(discord.ui.View):
    def __init__(self):
       super().__init__(timeout=None)
-      self.add_item(discord.ui.Button(label="Vote for Donald!", url="https://donald.a3d.pro/vote"))
+      self.add_item(discord.ui.Button(label="Vote for Cloudy!", url="https://cloudybot.xyz/vote"))
+
+class infoview(discord.ui.View):
+   def __init__(self, label: str):
+      super().__init__()
+      self.label = label
+      self.add_item(discord.ui.Button(label=self.label,style=discord.ButtonStyle.gray, disabled=True))

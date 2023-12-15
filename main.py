@@ -14,8 +14,9 @@ import aioconsole
 import traceback
 from config import bot
 import config
-from functions import process_ows, handle_autoroles, process_img2text
+from functions import process_ows, handle_autoroles, process_img2text, img2text, get_avatar, fetch_gif, hyperlink_button, get_definition, infoview
 import aioschedule
+from embeds import embedutil
 
 console = Console()
 
@@ -65,6 +66,43 @@ async def on_ready():
     await aioschedule.run_pending()
     await asyncio.sleep(5)
 
+
+@bot.tree.context_menu(name="Fetch image")
+async def fetch_image_context(interaction: discord.Interaction, msg: discord.Message):
+  await interaction.response.defer()
+  response = await img2text(msg.content)
+  await interaction.followup.send(embed=response,view=hyperlink_button(msg.jump_url,"Source Message"))
+
+@bot.tree.context_menu(name="Fetch gif")
+async def fetch_gif_context(interaction: discord.Interaction, msg: discord.Message):
+  try:
+   await interaction.response.defer()
+   embed = await fetch_gif(msg.content)
+   await interaction.followup.send(embed=embed,view=hyperlink_button(msg.jump_url,"Source Message"))
+  except Exception:
+    await interaction.followup.send(embed=embedutil("error",traceback.format_exc()))
+
+@bot.tree.context_menu(name="Define term")
+async def define_term_context(interaction: discord.Interaction, msg: discord.Message):
+  try:
+   await interaction.response.defer()
+   embed = await get_definition(msg.content)
+   await interaction.followup.send(embed=embed,view=hyperlink_button(msg.jump_url,"Source Message"))
+  except Exception:
+    await interaction.followup.send(embed=embedutil("error",traceback.format_exc()))
+
+@bot.tree.context_menu(name="Get avatar")
+async def get_avatar_context(interaction: discord.Interaction, user: discord.User):
+  try:
+    await interaction.response.defer()
+    response = await get_avatar(user)
+    await interaction.followup.send(embed=response)
+  except Exception:
+    await interaction.followup.send(embed=embedutil("error",traceback.format_exc()))
+
+
+
+
 @bot.event
 async def on_message(msg):
   await process_ows(msg)
@@ -73,6 +111,12 @@ async def on_message(msg):
 @bot.event
 async def on_member_join(member):
   await handle_autoroles(member)
+
+@bot.event
+async def on_guild_join(guild):
+  general = guild.text_channels[0]
+  await general.send(embed=embedutil("welcome","message"),view=infoview("Automated message"))
+
 
 #Loading the bot
 async def main():

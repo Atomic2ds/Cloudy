@@ -14,6 +14,8 @@ import requests
 import traceback
 import json
 from config import client
+from views.facts import factview
+from functions import requestedby
 
 db = client.fact
 
@@ -40,7 +42,7 @@ class fact(commands.Cog):
             db.config.update_one({"guild_id": interaction.guild.id},{"$set": {"channel_id": option.id}})
           else:
             db.config.insert_one({"guild_id": interaction.guild.id,"channel_id": option.id})
-          await option.send(embed=embedutil("simple","This channel has succesfully been setup as a daily facts channel!"))
+          await option.send(embed=embedutil("simple","This channel has succesfully been setup as a daily facts channel!"),view=requestedby(interaction.user))
           await interaction.followup.send(embed=embedutil("success",f"Successfully set {option.mention} as the fact of the day channel!"))
          else:
             await interaction.response.defer(ephemeral=True)
@@ -73,7 +75,7 @@ class fact(commands.Cog):
     async def random(self, interaction: discord.Interaction):
       await interaction.response.defer()
       try:
-        await interaction.followup.send(embed=embedutil("fact","Random Fact"))
+        await interaction.followup.send(embed=embedutil("fact","Random Fact"),view=factview(interaction.user.name.capitalize()))
       except Exception:
          await interaction.followup.send(embed=embedutil("error",traceback.format_exc()),ephemeral=True)
 

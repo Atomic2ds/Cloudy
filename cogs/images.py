@@ -20,7 +20,9 @@ class images(commands.Cog):
 
     @commands.Cog.listener()
     async def on_ready(self):
-        print("Loaded the image cog")
+        print("┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓")
+        print("┃  Loaded the Images Cog         ┃")
+        print("┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛")
 
     image_cmd = app_commands.Group(name="image", description="Manage an image channel on your discord server")
 
@@ -35,7 +37,7 @@ class images(commands.Cog):
           else:
             db.config.insert_one({"guild_id": interaction.guild.id,"channel_id": option.id,"status": "enabled",})
           await option.send(embed=embedutil("simple","This channel has been configured as the text to image channel"))
-          await interaction.followup.send(embed=embedutil("success",f"Successfully set {option.mention} as the image api channel!"))
+          await interaction.followup.send(embed=embedutil("success",f"Successfully set {option.mention} as the text to image channel!"))
          except Exception:
             await interaction.followup.send(embed=embedutil("error",traceback.format_exc()))
        else:

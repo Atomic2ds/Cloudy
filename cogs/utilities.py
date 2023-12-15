@@ -13,6 +13,8 @@ from discord import Webhook
 from datetime import timedelta
 import datetime
 from embeds import embedutil
+from functions import get_avatar, get_definition, hyperlink_button
+from views.utilities import avatarview
 
 
 class utilities(commands.Cog):
@@ -30,16 +32,16 @@ class utilities(commands.Cog):
     @app_commands.command(name="avatar", description="Get someones avatar up close")
     @app_commands.describe(user="Which users avatar to look at")
     async def avatar(self, interaction: discord.Interaction, user: Optional[discord.User]):
+      try:
        await interaction.response.defer()
        if user == None:
           user = interaction.user
-       pfp = user.avatar
-       embed = discord.Embed(title=user.name.capitalize(), colour=0x4c7fff, description=f"[Avatar URL]({user.avatar})")
-       embed.set_image(url=str(pfp))
-       await interaction.followup.send(embed=embed)
+       embed = await get_avatar(user)
+       await interaction.followup.send(embed=embed,view=avatarview(user))
+      except Exception:
+         await interaction.followup.send(embed=embedutil("error",traceback.format_exc()),ephemeral=True)
     
-          
-
+        
     #Make a simple or custom poll
     @app_commands.command(name="poll", description="Make a poll instantly, simple or with custom choices")
     @app_commands.describe(question="What the poll is asking")
@@ -171,7 +173,7 @@ class utilities(commands.Cog):
       try:
        await interaction.response.defer()
        response = await get_definition(word)
-       await interaction.followup.send(embed=embedutil("definition",(word,response)))
+       await interaction.followup.send(embed=response)
       except Exception:
          await interaction.followup.send(embed=embedutil("error",traceback.format_exc()))
        
@@ -181,18 +183,3 @@ class utilities(commands.Cog):
 async def setup(bot):
     await bot.add_cog(utilities(bot))
 
-async def get_definition(term):
-    url = "https://mashape-community-urban-dictionary.p.rapidapi.com/define"
-    headers = {
-      "X-RapidAPI-Key": "09efa8afd5msh469606e5298e21cp14d14ajsnfd148325b4b2"
-    }
-
-    async with aiohttp.ClientSession() as session:
-        async with session.get(url, headers=headers, params={"term": term}) as response:
-            data = await response.json()
-
-    if len(data["list"]) > 0:
-        definition = data["list"][0]["definition"]
-        return definition
-    else:
-        return "Sorry, I couldn't find a definition for that term."

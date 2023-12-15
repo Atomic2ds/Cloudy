@@ -1,0 +1,148 @@
+from discord import ui
+import discord
+from embeds import embedutil
+import datetime
+from config import bot
+import pymongo
+from discord.ext import commands
+from discord import app_commands
+import traceback
+from config import client
+
+db = client.movie
+
+class movie(commands.Cog):
+    
+    def __init__(self, bot):
+        self.bot = bot
+
+    @commands.Cog.listener()
+    async def on_ready(self):
+        print("Loaded the movie cog")
+
+    movie_cmd = app_commands.Group(name="movie", description="Create and suggest movies")
+
+    @movie_cmd.command(name="form", description="Suggest a movie for us to watch for movie night")
+    async def suggest_movie(self, interaction: discord.Interaction):
+        await interaction.response.send_modal(movieform())
+
+    @movie_cmd.command(name="channel", description="Choose where the channel for movie submissions will be")
+    async def movie_channel(self, interaction: discord.Interaction, option: discord.TextChannel):
+       if interaction.user.guild_permissions.manage_guild:
+         try:
+          await interaction.response.defer()
+          if db.config.find_one({"guild_id": interaction.guild.id}):
+            db.config.update_one({"guild_id": interaction.guild.id},{"$set": {"channel_id": option.id}})
+          else:
+            db.config.insert_one({"guild_id": interaction.guild.id,"channel_id": option.id,"enabled": True,"mode": 1})
+          await interaction.followup.send(embed=embedutil("bot",["success",f"Successfully set {option.mention} as the movie night submissions channel!"],interaction.user,interaction.guild))
+         except Exception:
+            await interaction.followup.send(embed=embedutil("bot",["error",traceback.format_exc()],interaction.user,interaction.guild),ephemeral=True)
+       else:
+          await interaction.response.defer(ephemeral=True)
+          await interaction.followup.send(embed=embedutil("bot",["error","You don't have permission to use this command!"], interaction.user, interaction.guild))
+
+
+    @movie_cmd.command(name="mode", description="Choose what mode to run the movie night feature in")
+    @app_commands.choices(option=[
+      Choice(name="Public submissions channel", value="1"),
+      Choice(name="Private submissions channel ", value="2"),
+    ])
+    async def movie_mode(self, interaction: discord.Interaction, option: str):
+       option = int(option)
+       if interaction.user.guild_permissions.manage_guild:
+         try:
+           if db.config.find_one({"guild_id": interaction.guild.id}):
+             db.config.update_one({"guild_id": interaction.guild.id},{"$set": {"mode": option}})
+             await interaction.response.send_message(embed=embedutil("bot",["success","Successfully updated your movie night mode!"],interaction.user,interaction.guild))
+           else:
+             await interaction.response.send_message(embed=embedutil("bot",["error","Your movie night config doesn't exist"],interaction.user,interaction.guild),ephemeral=True)
+         except Exception:
+            await interaction.response.send_message(embed=embedutil("bot",["error",traceback.format_exc()],interaction.user,interaction.guild),ephemeral=True)
+       else:
+          await interaction.response.defer(ephemeral=True)
+          await interaction.followup.send(embed=embedutil("bot",["error","You don't have permission to use this command!"], interaction.user, interaction.guild))
+
+
+    @movie_cmd.command(name="disable",description="Disable the movie submissions and clear the configuration")
+    async def disable(self, interaction: discord.Interaction):
+      if interaction.permissions.manage_guild:
+         try:
+          if db.config.find_one({"guild_id": interaction.guild.id}):
+            db.config.update_one({"guild_id": interaction.guild.id},{"$set": {"enabled": False}})
+          else:
+            db.config.insert_one({"guild_id": interaction.guild.id,"enabled": False,"mode": 1})
+          await interaction.response.send_message(embed=embedutil("bot",["success","Successfully disabled the movie night submissions!"],interaction.user,interaction.guild))
+         except Exception as e:
+            await interaction.response.send_message(embed=embedutil("bot",["erorr",e],interaction.user,interaction.guild),ephemeral=True)
+      else:
+          await interaction.response.send_message(embed=embedutil("bot",["error","You don't have permission to run this command!"],interaction.user,interaction.guild),ephemeral=True)
+
+
+async def setup(bot):
+    await bot.add_cog(movie(bot))
+
+
+
+
+
+
+
+
+
+
+
+
+class movieform(ui.Modal, title="Movie Submission"):
+    movie_name = ui.TextInput(label="Name of the Movie", placeholder="The actual name of the Movie", style=discord.TextStyle.short, required=True)
+    movie_about = ui.TextInput(label="Whats the movie about (OPTIONAL)", placeholder="Give a simple/brief description", style=discord.TextStyle.long, required=False)
+    movie_services = ui.TextInput(label="Wheres the movie available?", placeholder="Netflix, Stan, Prime, Etc", style=discord.TextStyle.short, required=True)
+    extra_info = ui.TextInput(label="Anything we should know? (OPTIONAL)", placeholder="Enter anything extra here", style=discord.TextStyle.short, required=False)
+
+    async def on_submit(self, interaction: discord.Interaction):
+     try:
+       client = pymongo.MongoClient("mongodb://Atomic:BRafcxzEcGNbRaEKkP58hF4xjbDXRH@bot1.cloud.a3d.pro:32768/")
+       cursor = client.movie.config.find({"guild_id": interaction.guild.id,})
+       for document in cursor:
+        movie_status = document["enabled"]
+        movie_mode = document["mode"]
+        movie_channel_id = document["channel_id"]
+       await interaction.response.defer(ephemeral=True)
+
+       if not movie_status:
+          await interaction.followup.send(embed=embedutil("bot",["error","The movie night feature has not been setup yet!"],interaction.user,interaction.guild))
+          return
+       if movie_status == False:
+          await interaction.followup.send(embed=embedutil("bot",["error","The movie night feature is currently disabled!"],interaction.user,interaction.guild))
+
+       if movie_status == True and movie_mode == 1:
+        em = discord.Embed(colour=0x4c7fff, title="Movie Night Submission", timestamp=datetime.datetime.utcnow())
+        em.set_author(name=interaction.user.name.capitalize(), icon_url=interaction.user.avatar)
+        em.set_footer(text=interaction.user.id)
+        em.add_field(name="1. Whats the name of the Movie?",value=str(self.movie_name), inline=False)
+        if not str(self.movie_about) == "":
+         em.add_field(name="2. Whats the movie about?",value=str(self.movie_about), inline=False)
+        em.add_field(name="3. Wheres the movie available?",value=str(self.movie_services), inline=False)
+        if not str(self.extra_info) == "":
+         em.add_field(name="4. Is there any extra information?", value=str(self.extra_info), inline=False)
+        channel = bot.get_channel(movie_channel_id)
+        thread_msg = await channel.send(embed=em)
+        thread = await channel.create_thread(name=f"Chat about {interaction.user.name.capitalize()}'s suggestion",type=discord.ChannelType.public_thread,message=thread_msg)
+        await interaction.followup.send(embed=embedutil("bot",["success","Successfully submitted a movie!"],interaction.user,interaction.guild), ephemeral=True)
+
+       if movie_status == True and movie_mode == 2:
+          em = discord.Embed(colour=0x4c7fff, title="Movie Night Submission", timestamp=datetime.datetime.utcnow())
+          em.set_author(name=interaction.user.name.capitalize(), icon_url=interaction.user.avatar)
+          em.set_footer(text=interaction.user.id)
+          em.add_field(name="1. Whats the name of the Movie?",value=str(self.movie_name), inline=False)
+          if not str(self.movie_about) == "":
+           em.add_field(name="2. Whats the movie about?",value=str(self.movie_about), inline=False)
+          em.add_field(name="3. Wheres the movie available?",value=str(self.movie_services), inline=False)
+          if not str(self.extra_info) == "":
+           em.add_field(name="4. Is there any extra information?", value=str(self.extra_info), inline=False)
+          channel = bot.get_channel(movie_channel_id)
+          await channel.send(embed=em)
+          await interaction.followup.send(embed=embedutil("bot",["success","Successfully submitted a movie!"],interaction.user,interaction.guild), ephemeral=True)
+
+     except Exception:
+        await interaction.response.send_message(embed=embedutil("bot",["error",traceback.format_exc()],interaction.user,interaction.guild),ephemeral=True)
