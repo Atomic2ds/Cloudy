@@ -21,4 +21,3 @@ async def daily_task():
         pass
         continue
       
-aioschedule.every().day.at("12:00").do(daily_task)
