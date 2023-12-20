@@ -162,6 +162,7 @@ def embedutil(category, content):
             embed.add_field(name="/help", value="What your using right now, view all commands available on the bot")
             embed.add_field(name="/vote", value="Vote for the Cloudy bot on top.gg, to help us climb the leaderboards")
             embed.add_field(name="/invite", value="Get a link to invite the bot to your own discord server community")
+            embed.add_field(name="/support", value="Join our support server to suggest features, report bugs and more!")
         
         elif content == "duck":
             embed = discord.Embed(colour=0x4c7fff,title="Duck commands",description="Commands to do with ducks because we love ducks")
