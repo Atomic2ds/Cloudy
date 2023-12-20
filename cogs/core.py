@@ -13,7 +13,7 @@ import requests
 import config
 from embeds import embedutil
 import aiohttp
-from views.core import inviteview, voteview
+from views.core import inviteview, voteview, supportview
 from functions import infoview
 
 class core(commands.Cog):
@@ -52,6 +52,11 @@ class core(commands.Cog):
     async def invite(self, interaction: discord.Interaction):
        await interaction.response.defer()
        await interaction.followup.send(embed=embedutil("invite",None),view=inviteview())
+
+    @app_commands.command(name="support",description="Get the link to the Cloudy support server!")
+    async def support(self, interaction: discord.Interaction):
+       await interaction.response.defer()
+       await interaction.followup.send(embed=embedutil("support",None),view=supportview())
 
     @app_commands.command(name="vote",description="Get the link to vote for me on top.gg!")
     async def vote(self, interaction: discord.Interaction):

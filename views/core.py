@@ -49,6 +49,11 @@ class voteview(discord.ui.View):
       super().__init__(timeout=None)
       self.add_item(discord.ui.Button(label="Vote for Cloudy!", url="https://cloudybot.xyz/vote"))
 
+class supportview(discord.ui.View):
+   def __init__(self):
+      super().__init__(timeout=None)
+      self.add_item(discord.ui.Button(label="Support Server", url="https://discord.gg/DUFfRvBXnk"))
+
 class infoview(discord.ui.View):
    def __init__(self, label: str):
       super().__init__()

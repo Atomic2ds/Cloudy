@@ -103,6 +103,9 @@ def embedutil(category, content):
     if category == "vote":
         embed = discord.Embed(colour=0x4c7fff, description=f"Click the button below to vote for Cloudy on top.gg and make it easier for more people to find us!", title="Vote Link")
 
+    if category == "support":
+        embed = discord.Embed(colour=0x4c7fff, description=f"Click the button below to join the Cloudy support server, here you can report bugs, suggest new features and much more", title="Support Server")
+
     if category == "gif":
         embed = discord.Embed(colour=0x4c7fff, title=content[1],description=content[0])
         embed.set_image(url=content[2])
@@ -157,7 +160,7 @@ def embedutil(category, content):
             embed.add_field(name="/about", value="View information about the bot, and get the invite link and support server")
             embed.add_field(name="/ping", value="Check the ping from our server to discord api, also a health check")
             embed.add_field(name="/help", value="What your using right now, view all commands available on the bot")
-            embed.add_field(name="/vote", value="Vote for the Donald Duck bot on top.gg, to help us climb the leaderboards")
+            embed.add_field(name="/vote", value="Vote for the Cloudy bot on top.gg, to help us climb the leaderboards")
             embed.add_field(name="/invite", value="Get a link to invite the bot to your own discord server community")
         
         elif content == "duck":
