@@ -15,6 +15,7 @@ import traceback
 from config import bot
 import config
 from functions import process_ows, handle_autoroles, process_img2text, img2text, get_avatar, fetch_gif, hyperlink_button, get_definition, infoview
+from views.utilities import avatarview
 import aioschedule
 from embeds import embedutil
 
@@ -96,7 +97,7 @@ async def get_avatar_context(interaction: discord.Interaction, user: discord.Use
   try:
     await interaction.response.defer()
     response = await get_avatar(user)
-    await interaction.followup.send(embed=response)
+    await interaction.followup.send(embed=response,view=avatarview(user))
   except Exception:
     await interaction.followup.send(embed=embedutil("error",traceback.format_exc()))
 
@@ -165,6 +166,9 @@ async def load():
     if file.endswith('.py'):
       await bot.load_extension(f'cogs.{file[:-3]}')
     
+
+#Schedules
+aioschedule.every().day.at("12:00").do(daily_task)
 
 # Initialize Bot
 asyncio.run(main())

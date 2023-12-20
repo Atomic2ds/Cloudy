@@ -16,7 +16,7 @@ import datetime
 from embeds import embedutil
 from config import client
 import pymongo
-from functions import publish_story, reset_ows, delete_story, read_story
+from functions import publish_story, reset_ows, delete_story, read_story, requestedby
 from views.ows import compileview, storiesview
 
 db = client.fun
@@ -45,7 +45,7 @@ class ows(commands.Cog):
             db.ows.update_one({"guild_id": interaction.guild.id},{"$set": {"channel_id": channel.id}})
           else:
             db.ows.insert_one({"guild_id": interaction.guild.id,"channel_id": channel.id,"words": [],"last_author": None})
-          await channel.send(embed=embedutil("ows",("welcome",interaction.guild)))
+          await channel.send(embed=embedutil("ows",("welcome",interaction.guild)),view=requestedby(interaction.user))
           await interaction.followup.send(embed=embedutil("success",f"Successfully set {channel.mention} as the one word story channel!"))
          else:
             await interaction.followup.send(embed=embedutil("denied","Your don't have permission to run this command"))
@@ -83,7 +83,7 @@ class ows(commands.Cog):
          cursor = client.fun.ows.find({"guild_id": interaction.guild.id,})
          for document in cursor: 
               channel = self.bot.get_channel(document["channel_id"])
-              await channel.send(embed=embedutil("ows",("disabled",interaction.guild)))
+              await channel.send(embed=embedutil("ows",("disabled",interaction.guild)),view=requestedby(interaction.user))
               db.ows.delete_many({"guild_id": interaction.guild.id})
               await interaction.followup.send(embed=embedutil("success",f"Successfully disabled the one word story module and cleared all data associated with it"))
        else:
@@ -95,6 +95,10 @@ class ows(commands.Cog):
     async def compile_story(self, interaction: discord.Interaction):
       await interaction.response.defer()
       try:
+       if not db.ows.find_one({"guild_id": interaction.guild.id}):
+            await interaction.followup.send(embed=embedutil("denied","The one word story is currently not configured yet!"))
+            return
+
        cursor = client.fun.ows.find({"guild_id": interaction.guild.id,})
        for document in cursor:
           words = document["words"]
