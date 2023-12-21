@@ -23,7 +23,6 @@ console = Console()
 
 #Scheduling
 from schedules import daily_task
-aioschedule.every().day.at("12:00").do(daily_task)
 
 # Sets up logging and initializes it.
 logger = logging.getLogger('ErrorLogging')
