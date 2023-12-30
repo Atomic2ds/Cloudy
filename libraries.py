@@ -1,2 +1,2 @@
-SOCIAL_LINKS="[Invite Link](https://top.gg/bot/1090917174991933540/invite)・[Support Server](https://discord.gg/DUFfRvBXnk)・[Documentation](https://docs.cloudybot.xyz)"
+SOCIAL_LINKS="[Invite Link](https://discord.com/api/oauth2/authorize?client_id=1090917174991933540&permissions=10206319209590&scope=bot%20applications.commands)・[Support Server](https://discord.gg/DUFfRvBXnk)・[Documentation](https://docs.cloudybot.xyz)"
 UPDATE_CHANNEL = 1180350358405529611
