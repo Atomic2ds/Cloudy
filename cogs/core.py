@@ -15,6 +15,7 @@ from embeds import embedutil
 import aiohttp
 from views.core import inviteview, voteview, supportview
 from functions import infoview
+import libraries
 
 class core(commands.Cog):
     
@@ -78,6 +79,43 @@ class core(commands.Cog):
         await interaction.followup.send(embed=embedutil("core","about"))
      except Exception:
         await interaction.followup.send(embed=embedutil("error",traceback.format_exc())) 
+
+    @app_commands.command(name="update", description="Send an update for Cloudy to the updates channel")
+    @app_commands.describe(title="The title of the Update", description="What the update is about", mention="What role to mention on the update message", file="What file to attach to the update")
+    async def updateslash(self, interaction: discord.Interaction, title: str, description: str, mention: Optional[discord.Role], file: Optional[discord.Attachment], channel: Optional[discord.TextChannel]):
+      try:
+         await interaction.response.defer(ephemeral=True)
+
+         if interaction.user.id == 612522818294251522:
+           if channel == None:
+             channel = self.bot.get_channel(libraries.UPDATE_CHANNEL)
+           embed = embedutil("core",("update",f"{title} <:9582_announce:1173479624412508202>",description,interaction))
+
+           if mention:
+            content = f"<@&{mention.id}>"
+           else:
+            content = None
+
+           if content:
+            await channel.send(content, embed=embed)
+           else:
+            await channel.send(embed=embed)
+
+            if file:
+                file_data = await file.read()
+                file_obj = discord.File(io.BytesIO(file_data), filename=file.filename)
+                try:
+                   await channel.send(file=file_obj)
+                except:
+                   pass
+            
+           await interaction.followup.send(embed=embedutil("success",f"Successfully sent the update for Cloudy"))
+
+         else:
+          await interaction.followup.send(embed=embedutil("denied","Only official Cloudy developers have access to this command"))
+
+      except Exception:
+         await interaction.followup.send(embed=embedutil("error",traceback.format_exc()))
 
 
 async def setup(bot):

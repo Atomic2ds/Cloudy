@@ -119,6 +119,14 @@ def embedutil(category, content):
             embed = discord.Embed(colour=0x4c7fff, description="We built cloudy so that server owners could easily add fun and cool features to their server without compromising on simplicity. Cloudy is made to be fast and responsive while being packed with cool and unique features",title="About Cloudy Bot")
             embed.add_field(name="Social Links",value=libraries.SOCIAL_LINKS,inline=False)
 
+        elif content[0] == "update":
+            title = content[1]
+            description = content[2]
+            interaction = content[3]
+            embed = discord.Embed(title=title, description=description, colour=0x4c7fff)
+            embed.set_author(name=interaction.user.name.capitalize() + "・Bot Developer", icon_url=interaction.user.avatar)
+            embed.set_footer(text=interaction.guild.name)
+
     if category == "warning":
         if content == "dms":
             embed = discord.Embed(colour=0x4c7fff,description=f"⚠️ Currently a lot of commands are broken in dms, we do not reccomend running stuff here, you should make a testing server instead")
