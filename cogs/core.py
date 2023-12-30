@@ -39,7 +39,7 @@ class core(commands.Cog):
     ])
     @app_commands.describe(type="What type of commands to look at")
     async def help(self, interaction: discord.Interaction, type: Optional[str]):
-       await handle_help_command(interaction,type)
+       await handle_help_command(interaction,type,False)
 
     @app_commands.command(name="invite",description="Get the link to invite me to your server!")
     async def invite(self, interaction: discord.Interaction):

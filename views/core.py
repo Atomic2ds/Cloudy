@@ -69,5 +69,5 @@ class welcomeview(discord.ui.View):
    async def commandsbutton(self, interaction: discord.Interaction, button: discord.ui.Button):
       from functions import handle_help_command
       type = None
-      await handle_help_command(interaction,type)
+      await handle_help_command(interaction,type,True)
   
