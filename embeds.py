@@ -106,6 +106,18 @@ def embedutil(category, content):
     if category == "support":
         embed = discord.Embed(colour=0x4c7fff, description=f"Click the button below to join the Cloudy support server, here you can report bugs, suggest new features and much more", title="Support Server")
 
+    if category == "documentation":
+        embed = discord.Embed(colour=0x4c7fff, description=f"Click the button below to view our documentation and learn how to setup different modules on the bot", title="Documentation Link")
+
+    if category == "faq":
+        embed = discord.Embed(colour=0x4c7fff, description=f"Below are some frequently asked questions about Cloudy",title="Cloudy FAQ")
+        embed.add_field(inline=False,name="How is Cloudy hosted",value="We use a virtual private server located in Germany so we can have good specs while the bot is still extremely cheap to run")
+        embed.add_field(inline=False,name="How can I trust Cloudy won't raid or destroy my server?",value="All of our servers are secure and encrypted, if we raided or destroyed your server our accounts would get terminated from discord, also top.gg has to verify and test all bots they add to their website and if the bot raided their testing server we wouldn't be on top.gg")
+        embed.add_field(inline=False,name="Will Cloudy always be 100% free", value="Most likely not, I have to pay quite a bit for the infrastructure to host the bot. However I will keep limits high but offer extensions to limits if you buy premium like I will let you have 8000 or 16000 characters in your one word story instead of 4096")
+        embed.add_field(inline=False,name="Are all features on Cloudy tested?",value="Yes, we have 2 testing bots so we can have 2 people working on the bot at once, we also have our own database server for testing features so nothing can get destroyed")
+        embed.add_field(inline=False,name="Do you take backups of your infrastructure",value="Absolutely, we take daily backups of our database server and our bot is on github, our database backups go back 5 days")
+        embed.add_field(inline=False,name="Social Links",value=libraries.SOCIAL_LINKS)
+
     if category == "gif":
         embed = discord.Embed(colour=0x4c7fff, title=content[1],description=content[0])
         embed.set_image(url=content[2])

@@ -13,7 +13,7 @@ import requests
 import config
 from embeds import embedutil
 import aiohttp
-from views.core import inviteview, voteview, supportview
+from views.core import inviteview, voteview, supportview, documentationview
 from functions import infoview, handle_help_command
 import libraries
 
@@ -55,6 +55,16 @@ class core(commands.Cog):
     async def vote(self, interaction: discord.Interaction):
        await interaction.response.defer()
        await interaction.followup.send(embed=embedutil("vote",None),view=voteview())
+
+    @app_commands.command(name="documentation",description="Get the link to our documentation website")
+    async def documentation(self, interaction: discord.Interaction):
+       await interaction.response.defer()
+       await interaction.followup.send(embed=embedutil("documentation",None),view=documentationview())
+
+    @app_commands.command(name="faq",description="View Cloudys frequently asked questions")
+    async def faq(self, interaction: discord.Interaction):
+       await interaction.response.defer()
+       await interaction.followup.send(embed=embedutil("faq",None))
 
     @app_commands.command(name="ping", description="Health check, view system ping")
     async def duck(self, interaction: discord.Interaction):
