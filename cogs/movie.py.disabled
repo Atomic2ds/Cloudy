@@ -6,6 +6,7 @@ from config import bot
 import pymongo
 from discord.ext import commands
 from discord import app_commands
+from discord.app_commands import Choice
 import traceback
 from config import client
 
@@ -22,7 +23,7 @@ class movie(commands.Cog):
 
     movie_cmd = app_commands.Group(name="movie", description="Create and suggest movies")
 
-    @movie_cmd.command(name="form", description="Suggest a movie for us to watch for movie night")
+    @movie_cmd.command(name="submit", description="Suggest a movie for us to watch for movie night")
     async def suggest_movie(self, interaction: discord.Interaction):
         await interaction.response.send_modal(movieform())
 
@@ -54,11 +55,11 @@ class movie(commands.Cog):
          try:
            if db.config.find_one({"guild_id": interaction.guild.id}):
              db.config.update_one({"guild_id": interaction.guild.id},{"$set": {"mode": option}})
-             await interaction.response.send_message(embed=embedutil("bot",["success","Successfully updated your movie night mode!"],interaction.user,interaction.guild))
+             await interaction.response.send_message(embed=embedutil("success","Successfully updated your movie night mode!"))
            else:
-             await interaction.response.send_message(embed=embedutil("bot",["error","Your movie night config doesn't exist"],interaction.user,interaction.guild),ephemeral=True)
+             await interaction.response.send_message(embed=embedutil("denied","Your movie night config doesn't exist"),ephemeral=True)
          except Exception:
-            await interaction.response.send_message(embed=embedutil("bot",["error",traceback.format_exc()],interaction.user,interaction.guild),ephemeral=True)
+            await interaction.response.send_message(embed=embedutil("error",traceback.format_exc()),ephemeral=True)
        else:
           await interaction.response.defer(ephemeral=True)
           await interaction.followup.send(embed=embedutil("bot",["error","You don't have permission to use this command!"], interaction.user, interaction.guild))

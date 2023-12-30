@@ -40,6 +40,11 @@ console_handler.setFormatter(formatter)
 logger.addHandler(console_handler)
 logger.addHandler
 
+@bot.event
+async def on_interaction(interaction):
+    if str(interaction.type) == "InteractionType.application_command":
+      if isinstance(interaction.channel, discord.DMChannel):
+        await interaction.followup.send(embed=embedutil("warning","dms"))
 
 #Login Messages
 @bot.event
@@ -99,8 +104,6 @@ async def get_avatar_context(interaction: discord.Interaction, user: discord.Use
     await interaction.followup.send(embed=response,view=avatarview(user))
   except Exception:
     await interaction.followup.send(embed=embedutil("error",traceback.format_exc()))
-
-
 
 
 @bot.event
@@ -167,7 +170,7 @@ async def load():
     
 
 #Schedules
-aioschedule.every().day.at("12:00").do(daily_task)
+aioschedule.every().day.at("21:37").do(daily_task)
 
 # Initialize Bot
 asyncio.run(main())

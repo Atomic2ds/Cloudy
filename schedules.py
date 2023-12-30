@@ -19,5 +19,4 @@ async def daily_task():
           await channel.send(embed=embed,view=infoview("Automated message"))
       except:
         pass
-        continue
       
