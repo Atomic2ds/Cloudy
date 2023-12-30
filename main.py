@@ -16,6 +16,7 @@ from config import bot
 import config
 from functions import process_ows, handle_autoroles, process_img2text, img2text, get_avatar, fetch_gif, hyperlink_button, get_definition, infoview
 from views.utilities import avatarview
+from views.core import welcomeview
 import aioschedule
 from embeds import embedutil
 
@@ -118,7 +119,7 @@ async def on_member_join(member):
 @bot.event
 async def on_guild_join(guild):
   general = guild.text_channels[0]
-  await general.send(embed=embedutil("welcome","message"),view=infoview("Built by Atomic2ds (Owner) and SuperRicky (Co-Owner)"))
+  await general.send(embed=embedutil("welcome","message"),view=welcomeview())
 
 
 #Loading the bot

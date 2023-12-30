@@ -12,7 +12,7 @@ class factview(discord.ui.View):
      self.add_item(discord.ui.Button(label=f"Requested by {self.username}",style=discord.ButtonStyle.gray, custom_id="balls", disabled=True))
 
   @discord.ui.button(label="Send Another", style=discord.ButtonStyle.blurple, custom_id="another_fact", emoji="📫")
-  async def memebutton(self, interaction: discord.Interaction, button: discord.ui.Button):
+  async def sendanotherfact(self, interaction: discord.Interaction, button: discord.ui.Button):
       await interaction.response.defer()
       try:
         await interaction.followup.send(embed=embedutil("fact","Random Fact"),view=factview(interaction.user.name.capitalize()))

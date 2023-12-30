@@ -59,3 +59,15 @@ class infoview(discord.ui.View):
       super().__init__()
       self.label = label
       self.add_item(discord.ui.Button(label=self.label,style=discord.ButtonStyle.gray, disabled=True))
+
+class welcomeview(discord.ui.View):
+   def __init__(self):
+      super().__init__(timeout=None)
+      self.add_item(discord.ui.Button(label="Built by Atomic2ds",style=discord.ButtonStyle.gray, disabled=True,custom_id="built_by_welcome_message"))
+
+   @discord.ui.button(label="Commands", style=discord.ButtonStyle.gray, custom_id="welcome_message_command_button", emoji="🪖")
+   async def commandsbutton(self, interaction: discord.Interaction, button: discord.ui.Button):
+      from functions import handle_help_command
+      type = None
+      await handle_help_command(interaction,type)
+  

@@ -331,3 +331,15 @@ async def read_story(interaction, name, db, bot=config.bot):
             await interaction.followup.send(embed=embedutil("denied",f"Unable to find a story named {name}"),ephemeral=True,view=requestedby(interaction.user))
        except Exception as e:
          await interaction.followup.send(embed=embedutil("error",traceback.format_exc()),ephemeral=True,view=requestedby(interaction.user))
+
+
+async def handle_help_command(interaction, type):
+   await interaction.response.defer()
+   try:
+       from views.core import helpoverview
+       if not type == None:
+        await interaction.followup.send(embed=embedutil("help",type),view=helpoverview())
+       else:
+        await interaction.followup.send(embed=embedutil("help","overview"),view=helpoverview())
+   except Exception:
+         await interaction.followup.send(embed=embedutil("error",traceback.format_exc()))

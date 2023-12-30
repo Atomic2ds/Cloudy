@@ -14,7 +14,7 @@ import config
 from embeds import embedutil
 import aiohttp
 from views.core import inviteview, voteview, supportview
-from functions import infoview
+from functions import infoview, handle_help_command
 import libraries
 
 class core(commands.Cog):
@@ -39,15 +39,7 @@ class core(commands.Cog):
     ])
     @app_commands.describe(type="What type of commands to look at")
     async def help(self, interaction: discord.Interaction, type: Optional[str]):
-      await interaction.response.defer()
-      try:
-       from views.core import helpoverview
-       if not type == None:
-        await interaction.followup.send(embed=embedutil("help",type),view=helpoverview())
-       else:
-        await interaction.followup.send(embed=embedutil("help","overview"),view=helpoverview())
-      except Exception:
-         await interaction.followup.send(embed=embedutil("error",traceback.format_exc()))
+       await handle_help_command(interaction,type)
 
     @app_commands.command(name="invite",description="Get the link to invite me to your server!")
     async def invite(self, interaction: discord.Interaction):
