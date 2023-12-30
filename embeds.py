@@ -220,11 +220,11 @@ def embedutil(category, content):
 
     elif category == "welcome":
         if content == "message":
-          embed = discord.Embed(title="Cloudy Bot",colour=0x4c7fff,description="Below you can see basic tutorials on how to setup some of our features")
-          embed.add_field(name="<a:6449spellbook:1180515817037774908> One word stories",value="A feature rich system for making one word stories with your server members, fast and responsive with things like publishing, compiling, purging, invalid character detection and more. Get started with </ows channel:1097919110249185390>",inline=False)
-          embed.add_field(name="<:3205peepofriends:1180514883368923276> Group chat mode", value="If your server is intented just as a simple server with you and your friends, you can enable the group chat module with </gc enable:1162952783104843846> which lets all users change the server icon and name like a group chat",inline=False)
-          embed.add_field(name="<:Nintendo64Controller:1180515154161578035> Game server linker", value="This feature uses the Pterodactyl API to let you connect your game servers to your discord community and let your members view the stats of your game servers easily, get started with </server add:1162767334990151741> and </status:1162767334990151740>", inline=False)
-          embed.add_field(name="Social Links",value="[Invite Link](https://top.gg/bot/1090917174991933540/invite)・[Support Server](https://discord.gg/DUFfRvBXnk)・[Documentation](https://docs.cloudybot.xyz)",inline=False)
+          embed = discord.Embed(title="Thanks for adding Cloudy Bot",colour=0x4c7fff,description="Below you can see basic tutorials on how to setup some of our features")
+          embed.add_field(name="One word stories",value="A feature rich system for making one word stories with your server members, fast and responsive with things like publishing, compiling, purging, invalid character detection and more. Get started with </ows channel:1097919110249185390>",inline=False)
+          embed.add_field(name="Text to image channels", value="You can setup a text to image channel so that any message sent into that channel you set is automatically prompted to an image website and it sends that image back, set it up with </image channel:1180400850275946564>",inline=False)
+          embed.add_field(name="Daily facts channels", value="Set a channel as a daily facts channel and we will automatically send a fact to it every single day, so you learn something new from discord every single day", inline=False)
+          embed.add_field(name="Social Links",value=libraries.SOCIAL_LINKS,inline=False)
           em = embed
 
     return embed

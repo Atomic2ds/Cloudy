@@ -118,7 +118,7 @@ async def on_member_join(member):
 @bot.event
 async def on_guild_join(guild):
   general = guild.text_channels[0]
-  await general.send(embed=embedutil("welcome","message"),view=infoview("Automated message"))
+  await general.send(embed=embedutil("welcome","message"),view=infoview("Built by Atomic2ds (Owner) and SuperRicky (Co-Owner)"))
 
 
 #Loading the bot
