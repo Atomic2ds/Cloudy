@@ -80,7 +80,7 @@ class aboutview(discord.ui.View):
    def __init__(self):
       super().__init__(timeout=None)
 
-   @discord.ui.button(label="Welcome Message", style=discord.ButtonStyle.gray, custom_id="about_button_welcome", emoji="🌎")
+   @discord.ui.button(label="Welcome Message", style=discord.ButtonStyle.gray, custom_id="about_button_welcome", emoji="👋")
    async def welcome(self, interaction: discord.Interaction, button: discord.ui.Button):
       from embeds import embedutil
       await interaction.response.send_message(embed=embedutil("welcome","message"),view=welcomeview(),ephemeral=True)
