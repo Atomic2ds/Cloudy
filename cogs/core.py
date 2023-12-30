@@ -13,7 +13,7 @@ import requests
 import config
 from embeds import embedutil
 import aiohttp
-from views.core import inviteview, voteview, supportview, documentationview, welcomeview
+from views.core import inviteview, voteview, supportview, documentationview, aboutview
 from functions import infoview, handle_help_command
 import libraries
 
@@ -61,16 +61,6 @@ class core(commands.Cog):
        await interaction.response.defer()
        await interaction.followup.send(embed=embedutil("documentation",None),view=documentationview())
 
-    @app_commands.command(name="faq",description="View Cloudys frequently asked questions")
-    async def faq(self, interaction: discord.Interaction):
-       await interaction.response.defer()
-       await interaction.followup.send(embed=embedutil("faq",None))
-
-    @app_commands.command(name="welcome",description="View the welcome message sent when you add Cloudy to your server")
-    async def welcome(self, interaction: discord.Interaction):
-       await interaction.response.defer()
-       await interaction.followup.send(embed=embedutil("welcome","message"),view=welcomeview())
-
     @app_commands.command(name="ping", description="Health check, view system ping")
     async def duck(self, interaction: discord.Interaction):
      try:
@@ -83,7 +73,7 @@ class core(commands.Cog):
     async def about(self, interaction: discord.Interaction):
      try:
         await interaction.response.defer()
-        await interaction.followup.send(embed=embedutil("core","about"))
+        await interaction.followup.send(embed=embedutil("core","about"),view=aboutview())
      except Exception:
         await interaction.followup.send(embed=embedutil("error",traceback.format_exc())) 
 

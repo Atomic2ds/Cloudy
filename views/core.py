@@ -75,4 +75,24 @@ class welcomeview(discord.ui.View):
       from functions import handle_help_command
       type = None
       await handle_help_command(interaction,type,True)
+
+class aboutview(discord.ui.View):
+   def __init__(self):
+      super().__init__(timeout=None)
+
+   @discord.ui.button(label="Welcome Message", style=discord.ButtonStyle.gray, custom_id="about_button_welcome", emoji="🌎")
+   async def welcome(self, interaction: discord.Interaction, button: discord.ui.Button):
+      from embeds import embedutil
+      await interaction.response.send_message(embed=embedutil("welcome","message"),view=welcomeview(),ephemeral=True)
+
+   @discord.ui.button(label="FAQ", style=discord.ButtonStyle.gray, custom_id="about_button_faq", emoji="❔")
+   async def faq(self, interaction: discord.Interaction, button: discord.ui.Button):
+       from embeds import embedutil
+       await interaction.response.send_message(embed=embedutil("faq",None),ephemeral=True)
+   
+
+   @discord.ui.button(label="Stats", style=discord.ButtonStyle.gray, custom_id="about_button_stats", emoji="📈")
+   async def stats(self, interaction: discord.Interaction, button: discord.ui.Button):
+      from embeds import embedutil
+      await interaction.response.send_message(embed=embedutil("denied","This embed is not finished yet"),ephemeral=True)
   
