@@ -48,6 +48,7 @@ class core(commands.Cog):
      try:
       if interaction.user.id == 612522818294251522:
        for guild in self.bot.guilds:
+         try:
           cursor = client.fun.ows.find({"guild_id": guild.id,})
           for document in cursor:
              channel_id = document["channel_id"]
@@ -62,6 +63,8 @@ class core(commands.Cog):
               channel_id = document["channel_id"]
               channel = self.bot.get_channel(channel_id)
               await channel.send(embed=embedutil("simple",msg),view=notify_buttons())
+         except:
+           pass
 
        await interaction.followup.send(embed=embedutil("success","Sent your notification out to every guild"))
 
