@@ -35,9 +35,9 @@ except:
     TESTING = "true"
 
 if TESTING == "false":
-    client = pymongo.MongoClient("mongodb://Atomic:BRafcxzEcGNbRaEKkP58hF4xjbDXRH@bot1.cloud.a3d.pro:32768/")
+    client = pymongo.MongoClient("mongodb://Atomic:BRafcxzEcGNbRaEKkP58hF4xjbDXRH@core1.cloud.a3d.pro:32768/")
 else:
-    client = pymongo.MongoClient("mongodb://Gtiu8YUBmoVFmgJDvcuXkwhbmm8Vp2:wCrRufidTcJYwXVNmzkS8FE34PHr5D@192.9.184.194:25630/")
+    client = pymongo.MongoClient("mongodb://Atomic:BRafcxzEcGNbRaEKkP58hF4xjbDXRH@core1.cloud.a3d.pro:32768/")
 
 try:
     TOKEN = os.environ["TOKEN"]

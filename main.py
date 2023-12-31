@@ -171,7 +171,7 @@ async def load():
     
 
 #Schedules
-aioschedule.every().day.at("21:37").do(daily_task)
+aioschedule.every().day.at("12:00").do(daily_task)
 
 # Initialize Bot
 asyncio.run(main())
