@@ -96,3 +96,11 @@ class aboutview(discord.ui.View):
       from embeds import embedutil
       await interaction.response.send_message(embed=embedutil("denied","This embed is not finished yet"),ephemeral=True)
   
+class notify_buttons(discord.ui.View):
+  def __init__(self):
+     super().__init__(timeout=None)
+
+  @discord.ui.button(label="Why this was sent", style=discord.ButtonStyle.gray, custom_id="learnmore_notifybutton", emoji="❔")
+  async def learnmore(self, interaction: discord.Interaction, button: discord.ui.Button):
+   from embeds import embedutil
+   await interaction.response.send_message(embed=embedutil("simple","The current channel is either a one word story channel or a text to image channel, only channels configured as that had this notification sent to them"),ephemeral=True)

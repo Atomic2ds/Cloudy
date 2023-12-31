@@ -13,9 +13,10 @@ import requests
 import config
 from embeds import embedutil
 import aiohttp
-from views.core import inviteview, voteview, supportview, documentationview, aboutview
+from views.core import inviteview, voteview, supportview, documentationview, aboutview,notify_buttons
 from functions import infoview, handle_help_command
 import libraries
+from config import client
 
 class core(commands.Cog):
     
@@ -40,6 +41,32 @@ class core(commands.Cog):
     @app_commands.describe(type="What type of commands to look at")
     async def help(self, interaction: discord.Interaction, type: Optional[str]):
        await handle_help_command(interaction,type,False)
+
+    @app_commands.command(name="notify",description="Send a message out to every single module configured channel")
+    async def notify(self, interaction: discord.Interaction, msg: str):
+     await interaction.response.defer()
+     try:
+      if interaction.user.id == 612522818294251522:
+       for guild in self.bot.guilds:
+          cursor = client.fun.ows.find({"guild_id": guild.id,})
+          for document in cursor:
+             channel_id = document["channel_id"]
+             channel = self.bot.get_channel(channel_id)
+             await channel.send(embed=embedutil("simple",msg),view=notify_buttons())
+
+          cursor = client.images.config.find({"guild_id":guild.id})
+          for document in cursor:
+           status = document["status"]
+           if status:
+             if status == "enabled":
+              channel_id = document["channel_id"]
+              channel = self.bot.get_channel(channel_id)
+              await channel.send(embed=embedutil("simple",msg),view=notify_buttons())
+
+       await interaction.followup.send(embed=embedutil("success","Sent your notification out to every guild"))
+
+     except Exception:
+       await interaction.followup.send(embed=embedutil("error",traceback.format_exc()))
 
     @app_commands.command(name="invite",description="Get the link to invite me to your server!")
     async def invite(self, interaction: discord.Interaction):

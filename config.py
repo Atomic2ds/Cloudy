@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Importing views from core
-from views.core import helpoverview, welcomeview, aboutview
+from views.core import helpoverview, welcomeview, aboutview, notify_buttons
 
 
 
@@ -25,6 +25,7 @@ class BotClient(commands.Bot):
         self.add_view(storiesview())
         self.add_view(welcomeview())
         self.add_view(aboutview())
+        self.add_view(notify_buttons())
 
 bot = BotClient()
 
