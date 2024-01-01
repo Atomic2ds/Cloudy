@@ -46,7 +46,7 @@ logger.addHandler
 async def on_interaction(interaction):
     if str(interaction.type) == "InteractionType.application_command":
       if isinstance(interaction.channel, discord.DMChannel):
-        await interaction.followup.send(embed=embedutil("warning","dms"))
+        await interaction.channel.send(embed=embedutil("warning","dms"))
 
 #Login Messages
 @bot.event
