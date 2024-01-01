@@ -141,7 +141,7 @@ def embedutil(category, content):
 
     if category == "warning":
         if content == "dms":
-            embed = discord.Embed(colour=0x4c7fff,description=f"⚠️ Currently a lot of commands are broken in dms, we do not reccomend running stuff here, you should make a testing server instead")
+            embed = discord.Embed(colour=0x4c7fff,description=f"⚠️ Currently a lot of commands are broken in dms, we do not recommend running stuff here, you should make a testing server instead")
         else:
            embed = discord.Embed(colour=0x4c7fff,description=f"⚠️ Warning: {content}")
 
