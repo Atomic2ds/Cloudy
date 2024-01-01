@@ -19,6 +19,7 @@ from views.utilities import avatarview
 from views.core import welcomeview
 import aioschedule
 from embeds import embedutil
+from monitor import uptime_ping
 
 console = Console()
 
@@ -149,6 +150,7 @@ async def main():
         except Exception:
           logger.error(traceback.format_exc())
 
+    uptime_ping()
     if botchoice == "1":
       await bot.start(config.TESTING1)
     elif botchoice == "2":
@@ -160,6 +162,7 @@ async def main():
     if config.TOKEN == None:
       print("Unable to boot the bot, no token env was set")
     else:
+      uptime_ping()
       await bot.start(config.TOKEN)
       
 
