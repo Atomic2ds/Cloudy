@@ -45,11 +45,11 @@ class basements(commands.Cog):
     @basement_cmd.command(name="add", description="Add someone to your basement")
     @app_commands.describe(name="The name of the person", description="Why they are in your basement or something like that")
     async def add(self, interaction: discord.Interaction, name: str, description: str):
-        await interaction.response.defer()
         try:
             if db.basements.find_one({"id": interaction.user.id, "name": name}):
-                await interaction.followup.send(embed=embedutil("denied","That person already exists in your basement"))
+                await interaction.response.send_message(embed=embedutil("denied","That person already exists in your basement"),ephemeral=True)
                 return
+            await interaction.response.defer()
             db.basements.insert_one({"id": interaction.user.id,"name": name,"description": description,})
             await interaction.followup.send(embed=embedutil("success",f"Successfully added `{name}` to your basement"))
         except Exception:
