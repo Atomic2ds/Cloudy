@@ -81,10 +81,11 @@ async def process_ows(msg):
                   client.fun.ows.update_one({ "guild_id": msg.guild.id },{ "$push": { "words": msg.content } })
 
                 if len(old_story) < 2048 and len(words) > 2048:
-                 await msg.channel.send(embed=embedutil("ows","halfway-warning"))
+                 await msg.channel.send(embed=embedutil("ows","halfway-warning"),view=infoview("Automated message"))
 
                 if len(old_story) < 4000 and len(words) > 4000:
-                 await msg.channel.send(embed=embedutil("ows","nearly-at-limit"))
+                 await msg.channel.send(embed=embedutil("ows","nearly-at-limit"),view=infoview("Automated message"))
+
 
 # -- Publishing one word stories -- 
 async def publish_story(interaction, name, info, db, bot=config.bot):
