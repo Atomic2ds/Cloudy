@@ -30,16 +30,7 @@ class core(commands.Cog):
         print("┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛")
 
     @app_commands.command(name="help",description="View all commands on the Cloudy Bot")
-    @app_commands.choices(type=[
-      Choice(name="Core commands", value="core"),
-      Choice(name="Fun commands", value="fun"),
-      Choice(name="Duck commands", value="duck"),
-      Choice(name="Utility commands", value="utility"),
-      Choice(name="Fact commands", value="fact"),
-      Choice(name="Story Commands", value="story"),
-    ])
-    @app_commands.describe(type="What type of commands to look at")
-    async def help(self, interaction: discord.Interaction, type: Optional[str]):
+    async def help(self, interaction: discord.Interaction):
        await handle_help_command(interaction,type,False)
 
     @app_commands.command(name="notify",description="Send a message out to every single module configured channel")
