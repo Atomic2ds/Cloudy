@@ -15,6 +15,7 @@ import aiohttp
 from embeds import embedutil
 from functions.fun import fetch_gif
 from functions.core import infoview
+import libraries
 
 from PIL import Image
 from io import BytesIO
@@ -45,6 +46,11 @@ class fun(commands.Cog):
       await interaction.response.defer()
       embed = await fetch_gif(query)
       await interaction.followup.send(embed=embed)
+
+    @app_commands.command(name="legacygif", description="Get a random gif from our old gif library")
+    async def legacygif(self, interaction: discord.Interaction):
+      await interaction.response.defer()
+      await interaction.followup.send(random.choice(libraries.gifs))
 
     @app_commands.command(name="meme", description="Get a Random Meme from Reddit")
     @app_commands.describe(subreddit="Which subreddit to grab the meme from")
