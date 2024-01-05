@@ -89,6 +89,9 @@ def embedutil(category, content):
         elif content == "nearly-at-limit":
             embed = discord.Embed(colour=0x4c7fff, title="Length warning", description="You are 96 characters off the one word story character limit, you should REALLY think about publishing/restting your story")
             embed.add_field(name="Social Links",value=libraries.SOCIAL_LINKS,inline=False)
+        elif content[0] == "purged":
+            embed = discord.Embed(colour=0x4c7fff, title="Channel Purged", description=f"The one word story channel was just purged having {content[1]} message(s) purged from the channel and the story, if anything is missing thats why")
+            embed.add_field(name="Social Links",value=libraries.SOCIAL_LINKS,inline=False)
 
 
     if category == "8ball":

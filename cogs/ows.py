@@ -209,6 +209,7 @@ class ows(commands.Cog):
           collection.update_one({"guild_id": interaction.guild.id}, {"$set": {"words": story_words}})
           channel = self.bot.get_channel(document["channel_id"])
           await channel.purge(limit=amount)
+          await channel.send(embed=embedutil("ows",("purged",str(amount))),view=requestedby(interaction.user))
           await interaction.followup.send(embed=embedutil("success",f"Successfully purged {str(amount)} message(s) from the story!"))
       except Exception as e:
          await interaction.followup.send(embed=embedutil("error",traceback.format_exc()))
