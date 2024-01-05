@@ -18,7 +18,7 @@ from config import client
 import pymongo
 
 from views.smp import link_smp_server, smp_status_view
-from functions.smp import fetch_server_info, fetch_server_resources, send_detailed_Stats
+from functions.smp import fetch_server_info, fetch_server_resources, send_detailed_Stats, send_smp_info
 from views.core import infoview
 db = client.smp
 
@@ -55,43 +55,13 @@ class smp(commands.Cog):
        except Exception:
           await interaction.response.send_message(embed=embedutil("error",traceback.format_exc()),ephemeral=True)
 
-    @smp_cmd.command(name="status",description="See what state the servers linked smp server is currently in")
-    async def status(self, interaction: discord.Interaction):
-      try:
-        results = db.config.find_one({"guild_id": interaction.guild.id})
-        if not results:
-            await interaction.response.send_message(embed=embedutil("denied","There is currently no server linked to your discord community"),ephemeral=True)
-            return
-
-        await interaction.response.defer()
-    
-        api_key = results["api_key"]
-        panel_url = results["panel_url"]
-        server_id = results["server_id"]
-
-        headers = {'Authorization': f'Bearer {api_key}','Accept': 'application/json'}
-
-        server_info = await fetch_server_info(panel_url, server_id, headers)
-        server_resources = await fetch_server_resources(panel_url, server_id, headers)
-
-        state = server_resources['attributes']['current_state']
-        is_suspended = server_resources['attributes']['is_suspended']
-        name = server_info['attributes']['name']
-
-        if is_suspended == True:
-            is_suspended = "is suspended"
-        else:
-            is_suspended = "is not suspended"
-        embed = embedutil("simple",f"The linked server named `{name}` is `{state.capitalize()}` and currently {is_suspended}")
-        embed.add_field(name="Social Links",value=libraries.SOCIAL_LINKS,inline=False)
-        await interaction.followup.send(embed=embed, view=smp_status_view())
-
-      except Exception:
-          await interaction.followup.send(embed=embedutil("error",traceback.format_exc()))
-
-    @smp_cmd.command(name="stats",description="View stats about the SMP, like CPU used, RAM used and Disk Space used up")
+    @smp_cmd.command(name="status",description="View stats about the SMP, like CPU used, RAM used and Disk Space used up")
     async def stats(self, interaction: discord.Interaction):
         await send_detailed_Stats(interaction, False)
+
+    @smp_cmd.command(name="info",description="See some more detailed information about the smp server, like location, node, limits and more")
+    async def stats(self, interaction: discord.Interaction):
+        await send_smp_info(interaction, False)
 
     @smp_cmd.command(name="unlink",description="Disconnect the currently connected smp server from your community")
     async def unlink(self, interaction: discord.Interaction):
