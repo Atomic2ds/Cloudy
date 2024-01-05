@@ -77,7 +77,6 @@ class ows(commands.Cog):
 
     @story_cmd.command(name="disable", description="Disable the one word story and delete the configuration")
     async def owslogs(self, interaction: discord.Interaction):
-      await interaction.response.defer()
       try:
 
         if not interaction.permissions.manage_guild:
