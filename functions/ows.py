@@ -37,15 +37,15 @@ async def process_ows(msg):
             except:
               pass
 
-            #if len(msg.content) > 45:
-            #  await msg.delete()
-            #  try:
-            #      channel_id = document["log_id"]
-            #      channel = bot.get_channel(channel_id)
-            #      em = embedutil("ows",("log",msg.content,msg.author.name.capitalize(),msg.author.avatar,msg.guild.name,"Message was over the 45 character limit"))
-            #      await channel.send(embed=em,view=infoview("Automated message"))
-            #  except:
-            #      await channel.send(embed=embedutil("error",traceback.format_exc()))
+            if len(msg.content) > 45:
+              await msg.delete()
+              try:
+                  channel_id = document["log_id"]
+                  channel = bot.get_channel(channel_id)
+                  em = embedutil("ows",("log",msg.content,msg.author.name.capitalize(),msg.author.avatar,msg.guild.name,"Message was over the 45 character limit"))
+                  await channel.send(embed=em,view=infoview("Automated message"))
+              except:
+                  await channel.send(embed=embedutil("error",traceback.format_exc()))
 
             if (any(not character.isalnum() for character in msg.content)):
                 await msg.delete()
