@@ -47,14 +47,11 @@ class basements(commands.Cog):
     async def add(self, interaction: discord.Interaction, name: str, description: str):
         await interaction.response.defer()
         try:
-            db.basements.insert_one(
-                {
-                "id": interaction.user.id,
-                "name": name,
-                "description": description,
-              }
-              )
-            await interaction.followup.send(f"Added `{name}` to your basement")
+            if db.basements.find_one({"id": interaction.user.id, "name": name}):
+                await interaction.followup.send(embed=embedutil("denied","That person already exists in your basement"))
+                return
+            db.basements.insert_one({"id": interaction.user.id,"name": name,"description": description,})
+            await interaction.followup.send(embed=embedutil("success",f"Successfully added `{name}` to your basement"))
         except Exception:
             await interaction.followup.send(embed=embedutil("error",traceback.format_exc()))
 
@@ -65,7 +62,7 @@ class basements(commands.Cog):
         await interaction.response.defer()
         try:
             result = db.basements.delete_many({"name": name})
-            await interaction.followup.send(f"Removed `{name}` from your basement")
+            await interaction.followup.send(embed=embedutil("success",f"Successfully removed `{name}` from your basement"))
         except Exception:
             await interaction.followup.send(embed=embedutil("error",traceback.format_exc()))
 

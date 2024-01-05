@@ -241,8 +241,8 @@ def embedutil(category, content):
         if content == "message":
           embed = discord.Embed(title="Thanks for adding Cloudy Bot",colour=0x4c7fff,description="Below you can see basic tutorials on how to setup some of our features")
           embed.add_field(name="One word stories",value="A feature rich system for making one word stories with your server members, fast and responsive with things like publishing, compiling, purging, invalid character detection and more. Get started with </ows channel:1097919110249185390>",inline=False)
+          embed.add_field(name="Link your SMP", value="Connect your minecraft smp server to your discord community easily and view things like its current running state, resource usage and extras like resource limits for example how many databases you can have, start off with </smp link:1192840039638507603>", inline=False)
           embed.add_field(name="Text to image channels", value="You can setup a text to image channel so that any message sent into that channel you set is automatically prompted to an image website and it sends that image back, set it up with </image channel:1180400850275946564>",inline=False)
-          embed.add_field(name="Daily facts channels", value="Set a channel as a daily facts channel and we will automatically send a fact to it every single day, so you learn something new from discord every single day", inline=False)
           embed.add_field(name="Social Links",value=libraries.SOCIAL_LINKS,inline=False)
           em = embed
 
