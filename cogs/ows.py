@@ -35,6 +35,8 @@ class ows(commands.Cog):
 
     story_cmd = app_commands.Group(name="ows", description="Configure the one word story")
 
+
+
     @story_cmd.command(name="channel",description="Set the channel of the one word story module")
     @app_commands.describe(option="What channel you want the one word story to be in")
     async def story_channel(self, interaction: discord.Interaction, option: discord.TextChannel):
@@ -52,6 +54,8 @@ class ows(commands.Cog):
             await interaction.followup.send(embed=embedutil("denied","Your don't have permission to run this command"))
         except Exception:
             await interaction.followup.send(embed=embedutil("error",traceback.format_exc()))
+
+
 
 
     @story_cmd.command(name="logs", description="Set your one word story log channel")
@@ -72,6 +76,8 @@ class ows(commands.Cog):
             await interaction.followup.send(embed=embedutil("denied","You don't have permission to run this command"))
        except Exception:
           await interaction.followup.send(embed=embedutil("error",traceback.format_exc()))
+
+
 
 
 
@@ -101,6 +107,8 @@ class ows(commands.Cog):
 
 
 
+
+
     @story_cmd.command(name="compile",description="Turn your one word story into a beautiful paragraph you can read")
     async def compile_story(self, interaction: discord.Interaction):
       try:
@@ -119,14 +127,20 @@ class ows(commands.Cog):
       except Exception:
          await interaction.followup.send(embed=embedutil("error",traceback.format_exc()))
 
+
+
     @story_cmd.command(name="reset", description="Reset the current story saved in cache, doesn't disable the module")
     async def owsreset(self, interaction: discord.Interaction):
        await reset_ows(interaction, db)
+
+
 
     @story_cmd.command(name="publish", description="Publish your story to your servers story library")
     @app_commands.describe(name="The name of your story", info="Give your story a description")
     async def publish_ows(self, interaction: discord.Interaction, name: str, info: str):
        await publish_story(interaction, name, info, db, self.bot)
+
+
 
     @story_cmd.command(name="stories",description="View stories available in your server published by the community")
     async def liststories(self, interaction: discord.Interaction):
@@ -150,15 +164,21 @@ class ows(commands.Cog):
       except Exception as e:
          await interaction.followup.send(embed=embedutil("error",traceback.format_exc()),ephemeral=True)
 
+
+
     @story_cmd.command(name="read", description="Read a story from your servers story library")
     @app_commands.describe(name="The name of the story to read")
     async def readstory(self,interaction: discord.Interaction, name: str):
        await read_story(interaction, name, db)
 
+
+
     @story_cmd.command(name="delete",description="Delete a story from your server library")
     @app_commands.describe(name="The name of the story to delete")
     async def delete_story(self, interaction: discord.Interaction, name: str):
        await delete_story(interaction, name, db)
+
+
 
     @story_cmd.command(name="purge", description="Remove a certain amount of words from your story")
     @app_commands.describe(amount="How many words to purge from your one word story")
@@ -193,32 +213,39 @@ class ows(commands.Cog):
       except Exception as e:
          await interaction.followup.send(embed=embedutil("error",traceback.format_exc()))
 
-    @story_cmd.command(name="clear", description="Clear all data connected to your server off Cloudy")
+
+
+    @story_cmd.command(name="clearalldata", description="*DESTRUCTIVE* Clear all data on one word stories associated to your server off Cloudy")
     @app_commands.describe(type="What part of one word stories you want to clear data from")
     @app_commands.choices(type=[
       Choice(name="Story Configuration", value="config"),
       Choice(name="Story Library", value="library"),
     ])
-    async def clear(self, interaction: discord.Interaction, type: str):
+    async def clearalldata(self, interaction: discord.Interaction, type: str):
+     await interaction.response.defer(ephemeral=True)
+     try:
       if not interaction.user.guild_permissions.manage_guild:
-         await interaction.response.send_message(embed=embedutil("error","You require the manage server permission"), ephemeral=True)
+         await interaction.followup.send(embed=embedutil("denied","You don't have permission to use this command!"), ephemeral=True)
          return
       
       if type == "config":
        if not db.ows.find_one({"guild_id": interaction.guild.id}):
-         await interaction.response.send_message(embed=embedutil("denied","The one word story is currently not configured yet!"),ephemeral=True)
+         await interaction.followup.send(embed=embedutil("denied","The one word story is currently not configured yet!"),ephemeral=True)
          return
+       
+       result = db.ows.delete_many({"guild_id":interaction.guild.id})
+       await interaction.followup.send(embed=embedutil("success","Successfully cleared all of your configuration associated with your server off our systems"))
        
       if type == "library":
         if not db.ows_stories.find_one({"guild_id": interaction.guild.id}):
-         await interaction.response.send_message(embed=embedutil("denied","You currently have no stories in your story library!"),ephemeral=True)
+         await interaction.followup.send(embed=embedutil("denied","You currently have no stories in your story library!"),ephemeral=True)
          return
+        
+        result = db.ows_stories.delete_many({"guild_id":interaction.guild.id})
+        await interaction.followup.send(embed=embedutil("success","Successfully cleared all stories associated with your server off our system"))
 
-      await interaction.response.defer()
-      try:
-          await interaction.followup.send(embed=embedutil("denied","This command is a work in progress and is not ready for release"))
-      except Exception:
-          await interaction.followup.send(embed=embedutil("error",traceback.format_exc()))
+     except Exception:
+          await interaction.followup.send(embed=embedutil("error",traceback.format_exc()),ephemeral=True)
 
 async def setup(bot):
     await bot.add_cog(ows(bot))
