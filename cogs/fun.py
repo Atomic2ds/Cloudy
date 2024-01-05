@@ -46,12 +46,6 @@ class fun(commands.Cog):
       embed = await fetch_gif(query)
       await interaction.followup.send(embed=embed)
 
-    @app_commands.command(name="curry", description="Fetch a beautiful curry picture")
-    async def gif_slash(self, interaction: discord.Interaction):
-      await interaction.response.defer()
-      embed = await fetch_gif("Indian Curry")
-      await interaction.followup.send(embed=embed)
-
     @app_commands.command(name="meme", description="Get a Random Meme from Reddit")
     @app_commands.describe(subreddit="Which subreddit to grab the meme from")
     @app_commands.choices(subreddit=[
