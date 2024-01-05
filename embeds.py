@@ -228,9 +228,9 @@ def embedutil(category, content):
         elif content == "smp":
             embed = discord.Embed(colour=0x4c7fff,title="SMP commands",description="Connect your minecraft smp server to your discord community easily")
             embed.add_field(name="/smp link", value="Link an smp to your discord server, only 1 can be linked at a time")
-            embed.add_field(name="/smp status", value="Simply just view and see if your smp is currently either starting, running or stopped")
+            embed.add_field(name="/smp status", value="View detailed stats about your smp server, showing things like CPU, RAM, Disk Space, Network Traffic and more")
             embed.add_field(name="/smp unlink", value="Disconnect your smp from your discord community, this lets you link a different server")
-            embed.add_field(name="/smp stats", value="View detailed stats about your smp server, showing things like CPU, RAM, Disk Space, Network Traffic and more")
+            embed.add_field(name="/smp info", value="Extra information about your server like limits on things like databases, cpu thread limit, stuff like that")
 
     if category == "meme":
         embed = discord.Embed(colour=0x4c7fff, title="Random Meme")

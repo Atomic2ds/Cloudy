@@ -34,7 +34,7 @@ class link_smp_server(ui.Modal, title="Link SMP Server"):
         
         
         db.config.insert_one({"guild_id": interaction.guild.id, "api_key": api_key, "panel_url": panel_url, "server_id": server_id})
-        embed = embedutil("simple",f"Successfully linked your smp server to your discord!")
+        embed = embedutil("success",f"Successfully linked your smp server to your discord!")
         await interaction.followup.send(embed=embed,ephemeral=True)
 
      except Exception:
