@@ -31,6 +31,7 @@ class core(commands.Cog):
 
     @app_commands.command(name="help",description="View all commands on the Cloudy Bot")
     async def help(self, interaction: discord.Interaction):
+       type = None
        await handle_help_command(interaction,type,False)
 
     @app_commands.command(name="notify",description="Send a message out to every single module configured channel")
