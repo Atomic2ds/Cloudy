@@ -1,6 +1,6 @@
 import discord
 from discord import ui
-from functions import publish_story, reset_ows, delete_story, read_story
+from functions.ows import publish_story, reset_ows, delete_story, read_story
 
 class publish_story_modal(ui.Modal, title="Publish Story"):
     story_name = ui.TextInput(label="Name of the story", placeholder="What you want to name your one word story", style=discord.TextStyle.short, required=True)

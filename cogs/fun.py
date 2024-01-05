@@ -13,7 +13,8 @@ import requests
 import config
 import aiohttp
 from embeds import embedutil
-from functions import fetch_gif, infoview
+from functions.fun import fetch_gif
+from functions.core import infoview
 
 from PIL import Image
 from io import BytesIO

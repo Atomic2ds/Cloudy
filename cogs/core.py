@@ -13,8 +13,8 @@ import requests
 import config
 from embeds import embedutil
 import aiohttp
-from views.core import inviteview, voteview, supportview, documentationview, aboutview,notify_buttons
-from functions import infoview, handle_help_command
+from views.core import inviteview, voteview, supportview, documentationview, aboutview,notify_buttons, infoview
+from functions.core import handle_help_command
 import libraries
 from config import client
 

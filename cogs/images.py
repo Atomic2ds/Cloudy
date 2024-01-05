@@ -9,7 +9,7 @@ import pymongo
 import requests
 import random
 from config import client
-from functions import img2text
+from functions.images import img2text
 
 db = client.images
 

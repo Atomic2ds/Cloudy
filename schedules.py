@@ -6,7 +6,7 @@ import traceback
 from config import bot
 from config import client
 import aioschedule
-from functions import infoview
+from functions.core import infoview
 
 async def daily_task():
     embed = embedutil("fact","Fact of the day")

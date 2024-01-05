@@ -15,7 +15,7 @@ import traceback
 import json
 from config import client
 from views.facts import factview
-from functions import requestedby
+from functions.core import requestedby
 
 db = client.fact
 

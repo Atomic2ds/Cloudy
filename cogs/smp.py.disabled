@@ -1,0 +1,118 @@
+import discord
+from discord.ext import commands
+from discord import app_commands, ui
+import random
+from discord.app_commands import Choice
+import aiohttp
+import requests
+from typing import Optional
+import json
+import traceback
+import os
+from discord import Webhook
+import libraries
+from datetime import timedelta
+import datetime
+from embeds import embedutil
+from config import client
+import pymongo
+from views.smp import link_smp_server
+
+from functions.smp import fetch_server_info, fetch_server_resources
+db = client.smp
+
+
+class smp(commands.Cog):
+    
+    def __init__(self, bot):
+        self.bot = bot
+
+    @commands.Cog.listener()
+    async def on_ready(self):
+        print("┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓")
+        print("┃  Loaded the SMP Cog            ┃")
+        print("┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛")
+
+    smp_cmd = app_commands.Group(name="smp", description="Link an smp server with your discord community easily")
+
+
+
+    @smp_cmd.command(name="link",description="Link an smp server using the pterodactyl api")
+    #@app_commands.describe(name="What you would like to name your SMP, is not connected to its name on your panel",description="Describe your smp server, will only be shown to people on discord")
+    async def link(self, interaction: discord.Interaction):#, name: str, description: str):
+       try:
+        if not interaction.permissions.manage_guild:
+          await interaction.response.send_message(embed=embedutil("denied","You don't have permissions to run this command!"),ephemeral=True)
+          return
+        
+        if db.config.find_one({"guild_id": interaction.guild.id}):
+          await interaction.response.send_message(embed=embedutil("denied","You already have a SMP linked, use `/smp unlink` to link a new one"),ephemeral=True)
+          return
+        
+        await interaction.response.send_modal(link_smp_server())
+
+       except Exception:
+          await interaction.response.send_message(embed=embedutil("error",traceback.format_exc()),ephemeral=True)
+
+
+
+    @smp_cmd.command(name="status",description="See what state the servers linked smp server is currently in")
+    async def status(self, interaction: discord.Interaction):
+      try:
+        results = db.config.find_one({"guild_id": interaction.guild.id})
+        if not results:
+            await interaction.response.send_message(embed=embedutil("denied","There is currently no server linked to your discord community"),ephemeral=True)
+            return
+
+        await interaction.response.defer()
+    
+        api_key = results["api_key"]
+        panel_url = results["panel_url"]
+        server_id = results["server_id"]
+
+        headers = {'Authorization': f'Bearer {api_key}','Accept': 'application/json'}
+
+        server_info = await fetch_server_info(panel_url, server_id, headers)
+        server_resources = await fetch_server_resources(panel_url, server_id, headers)
+
+        state = server_resources['attributes']['current_state']
+        is_suspended = server_resources['attributes']['is_suspended']
+        name = server_info['attributes']['name']
+
+        if is_suspended == True:
+            is_suspended = "is suspended"
+        else:
+            is_suspended = "not suspended"
+        await interaction.followup.send(embed=embedutil("simple",f"The linked server named `{name}` is in the `{state.capitalize()}` state and is currently {is_suspended}"))
+
+      except Exception:
+          await interaction.followup.send(embed=embedutil("error",traceback.format_exc()))
+
+
+
+    @smp_cmd.command(name="stats",description="View stats about the SMP, like CPU used, RAM used and Disk Space used up")
+    async def stats(self, interaction: discord.Interaction):
+        pass
+
+    @smp_cmd.command(name="unlink",description="Disconnect the currently connected smp server from your community")
+    async def unlink(self, interaction: discord.Interaction):
+       try:
+
+        if not interaction.permissions.manage_guild:
+            await interaction.response.send_message(embed=embedutil("denied","You don't have permissions to run this command!"),ephemeral=True)
+            return
+
+        if not db.config.find_one({"guild_id": interaction.guild.id}):
+            await interaction.response.send_message(embed=embedutil("denied","There is currently no server linked to your discord community"),ephemeral=True)
+            return
+
+        db.config.delete_many({"guild_id":interaction.guild.id})
+        await interaction.response.send_message(embed=embedutil("success","Successfully unlinked your currently linekd SMP server"),ephemeral=True)
+
+       except Exception:
+           await interaction.response.send_message(embed=embedutil("error",traceback.format_exc()),ephemeral=True)
+
+
+async def setup(bot):
+    await bot.add_cog(smp(bot))
+

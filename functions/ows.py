@@ -11,7 +11,9 @@ import json
 from views.core import infoview
 import libraries
 
+from functions.core import requestedby
 
+# -- Processing one word stories --
 async def process_ows(msg):
     cursor = client.fun.ows.find({"channel_id": msg.channel.id,})
     for document in cursor:
@@ -84,125 +86,7 @@ async def process_ows(msg):
                 if len(old_story) < 4000 and len(words) > 4000:
                  await msg.channel.send(embed=embedutil("ows","nearly-at-limit"))
 
-
-
-async def handle_autoroles(member):
- if member.bot == False:
-  try:
-    cursor = client.utils.autoroles.find({"guild_id": member.guild.id,})
-    for document in cursor:
-      roles = document["human_roles"]
-      for item in roles:
-        role = discord.utils.get(member.guild.roles,id=item)
-        await member.add_roles(role)
-  except Exception:
-    print(traceback.format_exc())
- if member.bot == True:
-   try:
-    cursor = client.utils.autoroles.find({"guild_id": member.guild.id,})
-    for document in cursor:
-      roles = document["bot_roles"]
-      for item in roles:
-        role = discord.utils.get(member.guild.roles,id=item)
-        await member.add_roles(role)
-   except Exception as e:
-    print(traceback.format_exc())
-
-
-
-async def process_img2text(msg):
-  if msg.author.bot == False:
-    cursor = client.images.config.find({"channel_id": msg.channel.id})
-    for document in cursor:
-       status = document["status"]
-    if status:
-       if status == "enabled":
-        try:
-          embed = await img2text(msg.content)
-          await msg.reply(embed=embed, mention_author=False)
-        except Exception:
-          embed = embedutil("error",traceback.format_exc())
-          await msg.reply(embed=embed,mention_author=False)
-
-async def img2text(query):
-    try:
-        url = f"https://api.pexels.com/v1/search?query={query}&per_page=15&page=1"
-        headers = {"Authorization": config.PEXELS_API}
-
-        async with aiohttp.ClientSession() as session:
-            async with session.get(url, headers=headers) as response:
-                response_data = await response.json()
-
-        embed = discord.Embed(colour=0x4c7fff, description=f"Prompt: {query}")
-        embed.set_footer(text="Sourced from pexels.com")
-
-        if "photos" in response_data:
-            photos = response_data["photos"]
-            if len(photos) > 0:
-                embed.set_image(url=random.choice(photos)["src"]["original"])
-                return embed
-            
-        embed = embedutil("simple", "Unable to find an image based on your query")
-        return embed
-
-    except Exception:
-        return embedutil("error", traceback.format_exc())
-    
-
-async def get_avatar(user):
-  pfp = user.avatar
-  embed = discord.Embed(title="Avatar Viewer", colour=0x4c7fff)
-  embed.set_image(url=str(pfp))
-  return embed
-
-async def fetch_gif(query):
-  try:
-   session = aiohttp.ClientSession()
-
-   if query == None:
-      response = await session.get(f'https://api.giphy.com/v1/gifs/random?api_key={config.GIPHY_KEY}')
-      data = json.loads(await response.text())
-      embed = embedutil("gif",(None,"Random Gif",data['data']['images']['original']['url']))
-
-   else:
-      search = query.replace(' ', '+')
-      response = await session.get('http://api.giphy.com/v1/gifs/search?q=' + search + f'&api_key={config.GIPHY_KEY}')
-      data = json.loads(await response.text())
-      gif_choice = random.randint(0, 9)
-      embed = embedutil("gif",(query,"Custom Gif",data['data'][gif_choice]['images']['original']['url']))
-
-   
-  except Exception:
-     embed = embedutil("error",traceback.format_exc())
-
-  await session.close()
-  return embed
-
-async def define(term):
-    url = "https://mashape-community-urban-dictionary.p.rapidapi.com/define"
-    headers = {
-      "X-RapidAPI-Key": "09efa8afd5msh469606e5298e21cp14d14ajsnfd148325b4b2"
-    }
-
-    async with aiohttp.ClientSession() as session:
-        async with session.get(url, headers=headers, params={"term": term}) as response:
-            data = await response.json()
-
-    if len(data["list"]) > 0:
-        definition = data["list"][0]["definition"]
-        return definition
-    else:
-        return "Sorry, I couldn't find a definition for that term."
-    
-async def get_definition(word):
-  try:
-    response = await define(word)
-    embed=embedutil("definition",(word,response))
-  except Exception:
-    embed=embedutil("error",traceback.format_exc())
-  
-  return embed
-
+# -- Publishing one word stories -- 
 async def publish_story(interaction, name, info, db, bot=config.bot):
       await interaction.response.defer()
       try:
@@ -253,14 +137,7 @@ async def publish_story(interaction, name, info, db, bot=config.bot):
       except Exception:
          await interaction.followup.send(embed=embedutil("error",traceback.format_exc()),view=requestedby(interaction.user))
 
-
-class hyperlink_button(discord.ui.View):
-   def __init__(self, link: str,label: str):
-      super().__init__()
-      self.inv = link
-      self.label = label
-      self.add_item(discord.ui.Button(label=self.label, url=self.inv))
-
+# -- Resetting the one word story -- 
 async def reset_ows(interaction, db, bot=config.bot):
      await interaction.response.defer()
      try:
@@ -283,12 +160,7 @@ async def reset_ows(interaction, db, bot=config.bot):
           await interaction.followup.send(embed=embedutil("error",traceback.format_exc()),view=requestedby(interaction.user))
 
 
-class requestedby(discord.ui.View):
-   def __init__(self, user: discord.User):
-      super().__init__()
-      self.user = user
-      self.add_item(discord.ui.Button(label=f"Requested by {self.user.name.capitalize()}",style=discord.ButtonStyle.gray, disabled=True))
-
+# -- Deleting a one word story -- 
 async def delete_story(interaction, name, db, bot=config.bot):
      await interaction.response.defer()
      try:
@@ -304,6 +176,7 @@ async def delete_story(interaction, name, db, bot=config.bot):
      except Exception:
           await interaction.followup.send(embed=embedutil("error",traceback.format_exc()),view=requestedby(interaction.user))
 
+# -- Reading a one word story -- 
 async def read_story(interaction, name, db, bot=config.bot):
        await interaction.response.defer()
        try:
@@ -332,14 +205,3 @@ async def read_story(interaction, name, db, bot=config.bot):
        except Exception as e:
          await interaction.followup.send(embed=embedutil("error",traceback.format_exc()),ephemeral=True,view=requestedby(interaction.user))
 
-
-async def handle_help_command(interaction, type, ephemeral):
-   await interaction.response.defer()
-   try:
-       from views.core import helpoverview
-       if not type == None:
-        await interaction.followup.send(embed=embedutil("help",type),view=helpoverview(),ephemeral=ephemeral)
-       else:
-        await interaction.followup.send(embed=embedutil("help","overview"),view=helpoverview(),ephemeral=ephemeral)
-   except Exception:
-         await interaction.followup.send(embed=embedutil("error",traceback.format_exc()),ephemeral=ephemeral)

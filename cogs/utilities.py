@@ -13,7 +13,9 @@ from discord import Webhook
 from datetime import timedelta
 import datetime
 from embeds import embedutil
-from functions import get_avatar, get_definition, hyperlink_button
+from functions.core import hyperlink_button
+from functions.other import get_avatar
+from functions.fun import get_definition
 from views.utilities import avatarview
 
 

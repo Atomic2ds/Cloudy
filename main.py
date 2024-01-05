@@ -14,7 +14,13 @@ import aioconsole
 import traceback
 from config import bot
 import config
-from functions import process_ows, handle_autoroles, process_img2text, img2text, get_avatar, fetch_gif, hyperlink_button, get_definition, infoview
+from functions.core import hyperlink_button
+from functions.images import process_img2text, img2text
+from functions.other import get_avatar
+from functions.fun import fetch_gif, get_definition
+from views.core import infoview
+from functions.autoroles import handle_autoroles
+from functions.ows import process_ows
 from views.utilities import avatarview
 from views.core import welcomeview
 import aioschedule
@@ -150,7 +156,7 @@ async def main():
         except Exception:
           logger.error(traceback.format_exc())
 
-    uptime_ping()
+    #uptime_ping()
     if botchoice == "1":
       await bot.start(config.TESTING1)
     elif botchoice == "2":

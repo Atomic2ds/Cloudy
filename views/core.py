@@ -72,7 +72,7 @@ class welcomeview(discord.ui.View):
 
    @discord.ui.button(label="Commands", style=discord.ButtonStyle.gray, custom_id="welcome_message_command_button", emoji="🪖")
    async def commandsbutton(self, interaction: discord.Interaction, button: discord.ui.Button):
-      from functions import handle_help_command
+      from functions.core import handle_help_command
       type = None
       await handle_help_command(interaction,type,True)
 

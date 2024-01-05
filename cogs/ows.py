@@ -16,7 +16,7 @@ import datetime
 from embeds import embedutil
 from config import client
 import pymongo
-from functions import publish_story, reset_ows, delete_story, read_story, requestedby
+from functions.ows import publish_story, reset_ows, delete_story, read_story, requestedby
 from views.ows import compileview, storiesview
 
 db = client.fun
@@ -36,6 +36,7 @@ class ows(commands.Cog):
     story_cmd = app_commands.Group(name="ows", description="Configure the one word story")
 
     @story_cmd.command(name="channel",description="Set the channel of the one word story module")
+    @app_commands.describe(option="What channel you want the one word story to be in")
     async def story_channel(self, interaction: discord.Interaction, option: discord.TextChannel):
         await interaction.response.defer()
         try:
@@ -72,32 +73,43 @@ class ows(commands.Cog):
        except Exception:
           await interaction.followup.send(embed=embedutil("error",traceback.format_exc()))
 
+
+
     @story_cmd.command(name="disable", description="Disable the one word story and delete the configuration")
     async def owslogs(self, interaction: discord.Interaction):
       await interaction.response.defer()
       try:
-       if interaction.user.guild_permissions.manage_guild:
-         if not db.ows.find_one({"guild_id": interaction.guild.id}):
-            await interaction.followup.send(embed=embedutil("denied","The one word story is currently not configured yet!"))
+
+        if not interaction.permissions.manage_guild:
+            await interaction.response.send_message(embed=embedutil("denied","You don't have permissions to run this command!"),ephemeral=True)
             return
-         cursor = client.fun.ows.find({"guild_id": interaction.guild.id,})
-         for document in cursor: 
+
+        if not db.ows.find_one({"guild_id": interaction.guild.id}):
+            await interaction.response.send_message(embed=embedutil("denied","The one word story is currently not configured yet!"),ephemeral=True)
+            return
+ 
+        await interaction.response.defer()
+
+        cursor = client.fun.ows.find({"guild_id": interaction.guild.id,})
+        for document in cursor: 
               channel = self.bot.get_channel(document["channel_id"])
               await channel.send(embed=embedutil("ows",("disabled",interaction.guild)),view=requestedby(interaction.user))
               db.ows.delete_many({"guild_id": interaction.guild.id})
               await interaction.followup.send(embed=embedutil("success",f"Successfully disabled the one word story module and cleared all data associated with it"))
-       else:
-          await interaction.followup.send(embed=embedutil("denied","You don't have permission to use this command"))
+         
       except Exception:
          await interaction.followup.send(embed=embedutil("error",traceback.format_exc()))
 
+
+
     @story_cmd.command(name="compile",description="Turn your one word story into a beautiful paragraph you can read")
     async def compile_story(self, interaction: discord.Interaction):
-      await interaction.response.defer()
       try:
        if not db.ows.find_one({"guild_id": interaction.guild.id}):
-            await interaction.followup.send(embed=embedutil("denied","The one word story is currently not configured yet!"))
+            await interaction.response.send_message(embed=embedutil("denied","The one word story is currently not configured yet!"),ephemeral=True)
             return
+       
+       await interaction.response.defer()
 
        cursor = client.fun.ows.find({"guild_id": interaction.guild.id,})
        for document in cursor:
@@ -144,10 +156,12 @@ class ows(commands.Cog):
        await read_story(interaction, name, db)
 
     @story_cmd.command(name="delete",description="Delete a story from your server library")
+    @app_commands.describe(name="The name of the story to delete")
     async def delete_story(self, interaction: discord.Interaction, name: str):
        await delete_story(interaction, name, db)
 
     @story_cmd.command(name="purge", description="Remove a certain amount of words from your story")
+    @app_commands.describe(amount="How many words to purge from your one word story")
     async def purge(self, interaction: discord.Interaction, amount: int):
       if not interaction.user.guild_permissions.manage_guild:
          await interaction.response.send_message(embed=embedutil("bot",["error","You require the manage server permission"],interaction.user,interaction.guild), ephemeral=True)
