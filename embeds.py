@@ -166,7 +166,7 @@ def embedutil(category, content):
             embed.add_field(name="💡 Fact commands", value="Set your own fact of the day channel, and get random facts quickly")
             embed.add_field(name="📘 Story commands", value="Setup and run your own one word story channel, highly flexible and packed with features")
             embed.add_field(name="📸 Image commands", value="Setup your own image to text channel, automatically converts all messages sent to images")
-            embed.add_field(name="🎮 SMP commands", value="Connect your minecraft smp server to your discord community and let your members view the status and status")
+            embed.add_field(name="🎮 SMP commands", value="Connect your minecraft smp server to your discord community and let your members view the status and basic info")
 
         elif content == "fun":
             embed = discord.Embed(colour=0x4c7fff,title="Fun commands",description="These are just commands to goof around with")
