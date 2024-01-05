@@ -88,6 +88,6 @@ class images(commands.Cog):
      await interaction.response.defer()
      embed = await img2text(query)
      await interaction.followup.send(embed=embed)
-
+     
 async def setup(bot):
     await bot.add_cog(images(bot))
