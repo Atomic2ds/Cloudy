@@ -37,15 +37,15 @@ async def process_ows(msg):
             except:
               pass
 
-            if len(msg.content) > 45:
-              await msg.delete()
-              try:
-                  channel_id = document["log_id"]
-                  channel = bot.get_channel(channel_id)
-                  em = embedutil("ows",("log",msg.content,msg.author.name.capitalize(),msg.author.avatar,msg.guild.name,"Message was over the 45 character limit"))
-                  await channel.send(embed=em,view=infoview("Automated message"))
-              except:
-                  await channel.send(embed=embedutil("error",traceback.format_exc()))
+            #if len(msg.content) > 45:
+            #  await msg.delete()
+            #  try:
+            #      channel_id = document["log_id"]
+            #      channel = bot.get_channel(channel_id)
+            #      em = embedutil("ows",("log",msg.content,msg.author.name.capitalize(),msg.author.avatar,msg.guild.name,"Message was over the 45 character limit"))
+            #      await channel.send(embed=em,view=infoview("Automated message"))
+            #  except:
+            #      await channel.send(embed=embedutil("error",traceback.format_exc()))
 
             if (any(not character.isalnum() for character in msg.content)):
                 await msg.delete()
@@ -70,7 +70,7 @@ async def process_ows(msg):
             
             elif len(words) > 4096:
               await msg.add_reaction("❌")
-              await msg.channel.send(embed=embedutil("ows","limit"))
+              await msg.channel.send(embed=embedutil("ows","limit"),view=infoview("Automated message"))
               return
 
 
@@ -92,26 +92,37 @@ async def publish_story(interaction, name, info, db, bot=config.bot):
       await interaction.response.defer()
       try:
        
+       
        if not db.ows.find_one({"guild_id": interaction.guild.id}):
-          await interaction.followup.send(embed=embedutil("denied","The one word story is currently not configured yet!"),view=requestedby(interaction.user))
+          await interaction.followup.send(embed=embedutil("denied","The one word story is currently not configured yet!"),ephemeral=True)
+          return
+       
+       words = await get_words_in_cache(interaction)
+       if len(words) < 1:
+          await interaction.followup.send(embed=embedutil("denied","Your story doesn't have any characters in it!"),ephemeral=True)
           return
        
        if not interaction.user.guild_permissions.manage_guild:
-          await interaction.followup.send(embed=embedutil("denied","You require the manage server permission"), ephemeral=True,view=requestedby(interaction.user))
+          await interaction.followup.send(embed=embedutil("denied","You require the manage server permission"), ephemeral=True)
           return
        
        if len(name) > 256:
-          await interaction.followup.send(embed=embedutil("denied","Story names can only be a max of 256 characters!"), ephemeral=True,view=requestedby(interaction.user))
+          await interaction.followup.send(embed=embedutil("denied","Story names can only be a max of 256 characters!"), ephemeral=True)
           return
        
        if len(info) > 1024:
-          await interaction.followup.send(embed=embedutil("denied","Story descriptions can only be a max of 1024 chracters!"), ephemeral=True,view=requestedby(interaction.user))
+          await interaction.followup.send(embed=embedutil("denied","Story descriptions can only be a max of 1024 chracters!"), ephemeral=True)
           return
        
        test = db.ows_stories.find_one({ "name": name, "guild_id": interaction.guild.id})
        if test:
-          await interaction.followup.send(embed=embedutil("denied","Story name already exists on the library!"),view=requestedby(interaction.user))
+          await interaction.followup.send(embed=embedutil("denied","Story name already exists on the library!"),ephemeral=True)
           return
+       
+       if db.ows_stories.count_documents({"guild_id": interaction.guild.id}) == 25:
+          await interaction.followup.send(embed=embedutil("denied","You have reached the limit on how many stories you can have"),ephemeral=True)
+          return
+       
 
        guild_id = interaction.guild.id
        query = {"guild_id": guild_id}
@@ -119,7 +130,7 @@ async def publish_story(interaction, name, info, db, bot=config.bot):
        if result:
           words = result["words"]
        else:
-          await interaction.followup.send(embed=embedutil("denied","Unable to fetch the words from your story"), ephemeral=True,view=requestedby(interaction.user))
+          await interaction.followup.send(embed=embedutil("denied","Unable to fetch the words from your story"), ephemeral=True)
           return
        db.ows_stories.insert_one({"guild_id": interaction.guild.id,"name": name,"info": info, "words": words})
        try:
@@ -127,16 +138,16 @@ async def publish_story(interaction, name, info, db, bot=config.bot):
             db.ows.update_one({"guild_id": interaction.guild.id},{"$set": {"words": []}})
             db.ows.update_one({"guild_id": interaction.guild.id},{"$set": {"last_author": None}})
        except Exception as e:
-           await interaction.followup.send(embed=embedutil("error",traceback.format_exc()), ephemeral=True,view=requestedby(interaction.user))
+           await interaction.followup.send(embed=embedutil("error",traceback.format_exc()), ephemeral=True)
            print(e)
        query = {"guild_id": interaction.guild.id}
        results = db.ows.find(query)
        for result in results:
           channel = bot.get_channel(result["channel_id"])
           await channel.send(embed=embedutil("ows","published"),view=requestedby(interaction.user))
-       await interaction.followup.send(embed=embedutil("success","Successfully uploaded your story to your servers story library!"),view=requestedby(interaction.user))
+       await interaction.followup.send(embed=embedutil("success","Successfully uploaded your story to your servers story library!"),ephemeral=True)
       except Exception:
-         await interaction.followup.send(embed=embedutil("error",traceback.format_exc()),view=requestedby(interaction.user))
+         await interaction.followup.send(embed=embedutil("error",traceback.format_exc()),ephemeral=True)
 
 # -- Resetting the one word story -- 
 async def reset_ows(interaction, db, bot=config.bot):
@@ -144,21 +155,21 @@ async def reset_ows(interaction, db, bot=config.bot):
      try:
          if interaction.user.guild_permissions.manage_guild:
             if not db.ows.find_one({"guild_id": interaction.guild.id}):
-              await interaction.followup.send(embed=embedutil("denied","The one word story is currently not configured yet!"),view=requestedby(interaction.user))
+              await interaction.followup.send(embed=embedutil("denied","The one word story is currently not configured yet!"),ephemeral=True)
               return
          
             cursor = client.fun.ows.find({"guild_id": interaction.guild.id,})
             db.ows.update_one({"guild_id": interaction.guild.id},{"$set": {"words": []}})
             db.ows.update_one({"guild_id": interaction.guild.id},{"$set": {"last_author": None}})
-            await interaction.followup.send(embed=embedutil("success","Successfully Reset the current one word story"),view=requestedby(interaction.user))
+            await interaction.followup.send(embed=embedutil("success","Successfully Reset the current one word story"),ephemeral=True)
             cursor = client.fun.ows.find({"guild_id": interaction.guild.id,})
             for document in cursor:
                 channel = bot.get_channel(document["channel_id"])
                 await channel.send(embed=embedutil("ows","reset"),view=requestedby(interaction.user))
          else:
-           await interaction.followup.send(embed=embedutil("denied","You don't have permission to use this command"),view=requestedby(interaction.user))
+           await interaction.followup.send(embed=embedutil("denied","You don't have permission to use this command"),ephemeral=True)
      except Exception:
-          await interaction.followup.send(embed=embedutil("error",traceback.format_exc()),view=requestedby(interaction.user))
+          await interaction.followup.send(embed=embedutil("error",traceback.format_exc()),ephemeral=True)
 
 
 # -- Deleting a one word story -- 
@@ -171,11 +182,11 @@ async def delete_story(interaction, name, db, bot=config.bot):
               return
          
             db.ows_stories.delete_one({"guild_id": interaction.guild.id,"name": name})
-            await interaction.followup.send(embed=embedutil("success","Successfully deleted your requested story!"),view=requestedby(interaction.user))
+            await interaction.followup.send(embed=embedutil("success","Successfully deleted your requested story!"),ephemeral=True)
          else:
-           await interaction.followup.send(embed=embedutil("denied","You don't have permission to use this command"),view=requestedby(interaction.user))
+           await interaction.followup.send(embed=embedutil("denied","You don't have permission to use this command"),ephemeral=True)
      except Exception:
-          await interaction.followup.send(embed=embedutil("error",traceback.format_exc()),view=requestedby(interaction.user))
+          await interaction.followup.send(embed=embedutil("error",traceback.format_exc()),ephemeral=True)
 
 # -- Reading a one word story -- 
 async def read_story(interaction, name, db, bot=config.bot):
@@ -206,3 +217,13 @@ async def read_story(interaction, name, db, bot=config.bot):
        except Exception as e:
          await interaction.followup.send(embed=embedutil("error",traceback.format_exc()),ephemeral=True,view=requestedby(interaction.user))
 
+async def get_words_in_cache(interaction):
+   cursor = client.fun.ows.find({"guild_id": interaction.guild.id,})
+   for document in cursor:
+     words = document["words"]
+     story_words = []
+     for item in words:
+      story_words.append(item)
+      story_words.append(" ")
+     story_words = "".join(story_words)
+     return story_words

@@ -16,7 +16,7 @@ import datetime
 from embeds import embedutil
 from config import client
 import pymongo
-from functions.ows import publish_story, reset_ows, delete_story, read_story, requestedby
+from functions.ows import publish_story, reset_ows, delete_story, read_story, requestedby, get_words_in_cache
 from views.ows import compileview, storiesview
 
 db = client.fun
@@ -108,17 +108,14 @@ class ows(commands.Cog):
             await interaction.response.send_message(embed=embedutil("denied","The one word story is currently not configured yet!"),ephemeral=True)
             return
        
+       words = await get_words_in_cache(interaction)
+       if len(words) < 1:
+          await interaction.response.send_message(embed=embedutil("denied","Your story doesn't have any characters in it!"),ephemeral=True)
+          return
+       
        await interaction.response.defer()
-
-       cursor = client.fun.ows.find({"guild_id": interaction.guild.id,})
-       for document in cursor:
-          words = document["words"]
-          story_words = []
-          for item in words:
-             story_words.append(item)
-             story_words.append(" ")
-          story_words = "".join(story_words)
-          await interaction.followup.send(embed=embedutil("ows",("compile",story_words)),view=compileview())
+       response = await get_words_in_cache(interaction)
+       await interaction.followup.send(embed=embedutil("ows",("compile",response)),view=compileview())
       except Exception:
          await interaction.followup.send(embed=embedutil("error",traceback.format_exc()))
 
@@ -138,6 +135,10 @@ class ows(commands.Cog):
        if not db.ows.find_one({"guild_id": interaction.guild.id}):
             await interaction.followup.send(embed=embedutil("denied","The one word story is currently not configured yet!"))
             return
+      
+       if not db.ows_stories.find_one({"guild_id": interaction.guild.id}):
+         await interaction.followup.send(embed=embedutil("denied","Currently no stories available, published stories end up here"),ephemeral=True)
+         return
        
        em = discord.Embed(colour=0x4c7fff, title=f"Stories in {interaction.guild.name}")
        guild_id = interaction.guild.id
@@ -163,9 +164,18 @@ class ows(commands.Cog):
     @app_commands.describe(amount="How many words to purge from your one word story")
     async def purge(self, interaction: discord.Interaction, amount: int):
       if not interaction.user.guild_permissions.manage_guild:
-         await interaction.response.send_message(embed=embedutil("bot",["error","You require the manage server permission"],interaction.user,interaction.guild), ephemeral=True)
+         await interaction.response.send_message(embed=embedutil("denied","You don't have permission to use this command!"), ephemeral=True)
          return
-
+      
+      if amount > 100:
+         await interaction.response.send_message(embed=embedutil("denied","You can only purge a max of 100 messages at a time!"), ephemeral=True)
+         return
+      
+      if not db.ows.find_one({"guild_id": interaction.guild.id}):
+         await interaction.response.send_message(embed=embedutil("denied","The one word story is currently not configured yet!"),ephemeral=True)
+         return
+      
+      await interaction.response.defer(ephemeral=True)
       try:
        cursor = client.fun.ows.find({"guild_id": interaction.guild.id,})
        for document in cursor:
@@ -177,9 +187,38 @@ class ows(commands.Cog):
           del story_words[-n:]
           collection = client.fun['ows']
           collection.update_one({"guild_id": interaction.guild.id}, {"$set": {"words": story_words}})
-          await interaction.response.send_message(embed=embedutil("bot",["success",f"Successfully purged {str(amount)} message(s) from the story!"],interaction.user,interaction.guild))
+          channel = self.bot.get_channel(document["channel_id"])
+          await channel.purge(limit=amount)
+          await interaction.followup.send(embed=embedutil("success",f"Successfully purged {str(amount)} message(s) from the story!"))
       except Exception as e:
-         await interaction.response.send_message(embed=embedutil("bot",["error",traceback.format_exc()],interaction.user,interaction.guild))
+         await interaction.followup.send(embed=embedutil("error",traceback.format_exc()))
+
+    @story_cmd.command(name="clear", description="Clear all data connected to your server off Cloudy")
+    @app_commands.describe(type="What part of one word stories you want to clear data from")
+    @app_commands.choices(type=[
+      Choice(name="Story Configuration", value="config"),
+      Choice(name="Story Library", value="library"),
+    ])
+    async def clear(self, interaction: discord.Interaction, type: str):
+      if not interaction.user.guild_permissions.manage_guild:
+         await interaction.response.send_message(embed=embedutil("error","You require the manage server permission"), ephemeral=True)
+         return
+      
+      if type == "config":
+       if not db.ows.find_one({"guild_id": interaction.guild.id}):
+         await interaction.response.send_message(embed=embedutil("denied","The one word story is currently not configured yet!"),ephemeral=True)
+         return
+       
+      if type == "library":
+        if not db.ows_stories.find_one({"guild_id": interaction.guild.id}):
+         await interaction.response.send_message(embed=embedutil("denied","You currently have no stories in your story library!"),ephemeral=True)
+         return
+
+      await interaction.response.defer()
+      try:
+          await interaction.followup.send(embed=embedutil("denied","This command is a work in progress and is not ready for release"))
+      except Exception:
+          await interaction.followup.send(embed=embedutil("error",traceback.format_exc()))
 
 async def setup(bot):
     await bot.add_cog(ows(bot))
