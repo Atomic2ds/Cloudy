@@ -16,9 +16,10 @@ import datetime
 from embeds import embedutil
 from config import client
 import pymongo
-from views.smp import link_smp_server
 
-from functions.smp import fetch_server_info, fetch_server_resources
+from views.smp import link_smp_server, smp_status_view
+from functions.smp import fetch_server_info, fetch_server_resources, send_detailed_Stats
+from views.core import infoview
 db = client.smp
 
 
@@ -46,15 +47,13 @@ class smp(commands.Cog):
           return
         
         if db.config.find_one({"guild_id": interaction.guild.id}):
-          await interaction.response.send_message(embed=embedutil("denied","You already have a SMP linked, use `/smp unlink` to link a new one"),ephemeral=True)
+          await interaction.response.send_message(embed=embedutil("denied","You already have an SMP linked, use `/smp unlink` to link a new one"),ephemeral=True)
           return
         
         await interaction.response.send_modal(link_smp_server())
 
        except Exception:
           await interaction.response.send_message(embed=embedutil("error",traceback.format_exc()),ephemeral=True)
-
-
 
     @smp_cmd.command(name="status",description="See what state the servers linked smp server is currently in")
     async def status(self, interaction: discord.Interaction):
@@ -82,17 +81,17 @@ class smp(commands.Cog):
         if is_suspended == True:
             is_suspended = "is suspended"
         else:
-            is_suspended = "not suspended"
-        await interaction.followup.send(embed=embedutil("simple",f"The linked server named `{name}` is in the `{state.capitalize()}` state and is currently {is_suspended}"))
+            is_suspended = "is not suspended"
+        embed = embedutil("simple",f"The linked server named `{name}` is `{state.capitalize()}` and currently {is_suspended}")
+        embed.add_field(name="Social Links",value=libraries.SOCIAL_LINKS,inline=False)
+        await interaction.followup.send(embed=embed, view=smp_status_view())
 
       except Exception:
           await interaction.followup.send(embed=embedutil("error",traceback.format_exc()))
 
-
-
     @smp_cmd.command(name="stats",description="View stats about the SMP, like CPU used, RAM used and Disk Space used up")
     async def stats(self, interaction: discord.Interaction):
-        pass
+        await send_detailed_Stats(interaction, False)
 
     @smp_cmd.command(name="unlink",description="Disconnect the currently connected smp server from your community")
     async def unlink(self, interaction: discord.Interaction):
@@ -107,7 +106,7 @@ class smp(commands.Cog):
             return
 
         db.config.delete_many({"guild_id":interaction.guild.id})
-        await interaction.response.send_message(embed=embedutil("success","Successfully unlinked your currently linekd SMP server"),ephemeral=True)
+        await interaction.response.send_message(embed=embedutil("success","Successfully unlinked your currently linked SMP server"),ephemeral=True)
 
        except Exception:
            await interaction.response.send_message(embed=embedutil("error",traceback.format_exc()),ephemeral=True)

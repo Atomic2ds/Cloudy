@@ -7,7 +7,7 @@ from functions.core import infoview
 import libraries
 from config import client
 
-from functions.smp import fetch_server_info, fetch_server_resources
+from functions.smp import fetch_server_info, fetch_server_resources, send_detailed_Stats
 db = client.smp
 
 class link_smp_server(ui.Modal, title="Link SMP Server"):
@@ -42,3 +42,16 @@ class link_smp_server(ui.Modal, title="Link SMP Server"):
      except Exception:
         await interaction.followup.send(embed=embedutil("error",traceback.format_exc()),ephemeral=True)
 
+
+
+class smp_status_view(discord.ui.View):
+   def __init__(self):
+      super().__init__(timeout=None)
+
+   @discord.ui.button(label="Detailed Stats", style=discord.ButtonStyle.gray, custom_id="detilaed_stats_status_embed", emoji="📊")
+   async def detailedstats(self, interaction: discord.Interaction, button: discord.ui.Button):
+      await send_detailed_Stats(interaction, True)
+
+   #@discord.ui.button(label="Server Info", style=discord.ButtonStyle.gray, custom_id="server_info_status_embed", emoji="🌍")
+   #async def serverinfo(self, interaction: discord.Interaction, button: discord.ui.Button):
+   #   pass

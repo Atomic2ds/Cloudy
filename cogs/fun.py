@@ -77,8 +77,8 @@ class fun(commands.Cog):
       Choice(name="NPC Template", value="npc"),
     ])
     async def template(self, interaction: discord.Interaction, type: str, user: discord.User):
+      await interaction.response.defer()
       try:
-        await interaction.response.defer()
         if user is None:
             user = interaction.user
 
@@ -109,17 +109,7 @@ class fun(commands.Cog):
             result_path = "./images/results/npc-result.jpg"
             npc.save(result_path)
 
-        # Upload the file to Discord
         file = discord.File(result_path)
-        #channel = self.bot.get_channel(1183413750557065287)
-
-        # Get the URL of the uploaded file
-        #file_url = message.attachments[0].url
-
-        # Now you can use file_url in your embed
-        #embed = discord.Embed(title="Image Template", color=0x4c7fff)
-        #embed.set_image(url=file_url)
-        #embed.set_footer(text=f"Template: {type.capitalize()}")
         await interaction.followup.send(file=file,view=infoview(f"User: {user.name.capitalize()}"))
 
       except Exception:

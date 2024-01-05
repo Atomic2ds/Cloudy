@@ -160,13 +160,13 @@ def embedutil(category, content):
     if category == "help":
         if content == "overview":
             embed = discord.Embed(colour=0x4c7fff,title="Modules on Cloudy",description="Welcome to Cloudy, below are commands and modules you can play with!")
-            embed.add_field(name="Core commands", value="Commands about the bot, like about the ping, the bots ping, stuff like that")
-            embed.add_field(name="Fun commands", value="Play around with things like memes from reddit, gifs and the magic 8 ball")
-            embed.add_field(name="Duck commands", value="Its in the name, commands centered entirely around ducks because we love ducks")
-            embed.add_field(name="Utility commands", value="Do things like make polls, set custom slowmode, get peoples avatatrs, send warnings and more")
-            embed.add_field(name="Fact commands", value="Set your own fact of the day channel, and get random facts quickly")
-            embed.add_field(name="Story commands", value="Setup and run your own one word story channel, highly flexible and packed with features")
-            embed.add_field(name="Image commands", value="Setup your own image to text channel, automatically converts all messages sent to images")
+            embed.add_field(name="🚀 Core commands", value="Commands about the bot, like about the ping, the bots ping, stuff like that")
+            embed.add_field(name="🎳 Fun commands", value="Play around with things like memes from reddit, gifs and the magic 8 ball")
+            embed.add_field(name="⚙️ Utility commands", value="Do things like make polls, set custom slowmode, get peoples avatatrs, send warnings and more")
+            embed.add_field(name="💡 Fact commands", value="Set your own fact of the day channel, and get random facts quickly")
+            embed.add_field(name="📘 Story commands", value="Setup and run your own one word story channel, highly flexible and packed with features")
+            embed.add_field(name="📸 Image commands", value="Setup your own image to text channel, automatically converts all messages sent to images")
+            embed.add_field(name="🎮 SMP commands", value="Connect your minecraft smp server to your discord community and let your members view the status and status")
 
         elif content == "fun":
             embed = discord.Embed(colour=0x4c7fff,title="Fun commands",description="These are just commands to goof around with")
@@ -224,6 +224,13 @@ def embedutil(category, content):
             embed.add_field(name="/image channel", value="Sets up the module, set the image to ")
             embed.add_field(name="/image disable", value="Disable the text to image channel, requires the channel to be set")
             embed.add_field(name="/image enable", value="Enable the text to image channel after disabling it")
+
+        elif content == "smp":
+            embed = discord.Embed(colour=0x4c7fff,title="SMP commands",description="Connect your minecraft smp server to your discord community easily")
+            embed.add_field(name="/smp link", value="Link an smp to your discord server, only 1 can be linked at a time")
+            embed.add_field(name="/smp status", value="Simply just view and see if your smp is currently either starting, running or stopped")
+            embed.add_field(name="/smp unlink", value="Disconnect your smp from your discord community, this lets you link a different server")
+            embed.add_field(name="/smp stats", value="View detailed stats about your smp server, showing things like CPU, RAM, Disk Space, Network Traffic and more")
 
     if category == "meme":
         embed = discord.Embed(colour=0x4c7fff, title="Random Meme")
