@@ -230,7 +230,8 @@ def embedutil(category, content):
             embed.add_field(name="/smp link", value="Link an smp to your discord server, only 1 can be linked at a time")
             embed.add_field(name="/smp status", value="View detailed stats about your smp server, showing things like CPU, RAM, Disk Space, Network Traffic and more")
             embed.add_field(name="/smp unlink", value="Disconnect your smp from your discord community, this lets you link a different server")
-            embed.add_field(name="/smp info", value="Extra information about your server like limits on things like databases, cpu thread limit, stuff like that")
+            embed.add_field(name="/smp info", value="Information like limits on things such as cpu thread limit, database limit, cpu limit, memory limit, etc")
+            embed.add_field(name="/smp status", value="View detailed stats about your smp server, showing things like CPU, RAM, Disk Space, Network Traffic and more")
 
     if category == "meme":
         embed = discord.Embed(colour=0x4c7fff, title="Random Meme")
