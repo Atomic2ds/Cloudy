@@ -72,6 +72,7 @@ class fun(commands.Cog):
           async with cs.get(f'https://www.reddit.com/r/{subreddit}/new.json?sort=hot') as r:
              res = await r.json()
              await interaction.followup.send(embed=embedutil("meme",(res['data']['children'] [random.randint(0, 25)]['data']['url'],subreddit)))
+             await interaction.followup.send(embed=embedutil("simple","We are aware of issues with this command and are working to fix it"),ephemeral=True)
       except Exception:
          await interaction.followup.send(embed=embedutil("error",traceback.format_exc()))
 
