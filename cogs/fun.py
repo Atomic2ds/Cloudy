@@ -72,9 +72,9 @@ class fun(commands.Cog):
           async with cs.get(f'https://www.reddit.com/r/{subreddit}/new.json?sort=hot') as r:
              res = await r.json()
              await interaction.followup.send(embed=embedutil("meme",(res['data']['children'] [random.randint(0, 25)]['data']['url'],subreddit)))
-             await interaction.followup.send(embed=embedutil("simple","We are aware of issues with this command and are working to fix it"),ephemeral=True)
       except Exception:
          await interaction.followup.send(embed=embedutil("error",traceback.format_exc()))
+         await interaction.followup.send(embed=embedutil("simple","We are aware of issues with this command and are working to fix it"),ephemeral=True)
 
     @app_commands.command(name="template", description="Put a users face on one of our Templates!")
     @app_commands.describe(type="Which Template to use for the image", user="What users face you want to put on the Template")
