@@ -73,7 +73,8 @@ class fun(commands.Cog):
              res = await r.json()
              await interaction.followup.send(embed=embedutil("meme",(res['data']['children'] [random.randint(0, 25)]['data']['url'],subreddit)))
       except Exception:
-         await interaction.followup.send(embed=embedutil("error",traceback.format_exc()))
+         await interaction.followup.delete_message()
+         await interaction.followup.send(embed=embedutil("error",traceback.format_exc()),ephemeral=True)
          #await interaction.followup.send(embed=embedutil("simple","We are aware of issues with this command and are working to fix it"),ephemeral=True)
 
     @app_commands.command(name="template", description="Put a users face on one of our Templates!")

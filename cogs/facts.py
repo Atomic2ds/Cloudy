@@ -46,7 +46,7 @@ class fact(commands.Cog):
           await interaction.followup.send(embed=embedutil("success",f"Successfully set {option.mention} as the fact of the day channel!"))
          else:
             await interaction.response.defer(ephemeral=True)
-            await interaction.followup.send(embed=embedutil("bot",["error","You don't have permission to use this command!"], interaction.user, interaction.guild))
+            await interaction.followup.send(embed=embedutil("denied","You don't have permission to use this command!", interaction.user, interaction.guild))
        except Exception:
           await interaction.followup.send(embed=embedutil("error",traceback.format_exc()),ephemeral=True)
     
@@ -67,17 +67,17 @@ class fact(commands.Cog):
             channel = self.bot.get_channel()
           await interaction.followup.send(embed=embedutil("success","Successfully disabled the fact of the day channel!"))
       else:
-          await interaction.followup.send(embed=embedutil("error","You don't have permission to run this command!"),ephemeral=True)
+          await interaction.followup.send(embed=embedutil("denied","You don't have permission to run this command!"),ephemeral=True)
      except Exception:
        await interaction.followup.send(embed=embedutil("error",traceback.format_exc()),ephemeral=True)
 
-    @fact_cmd.command(name="random",description="Generate a random fact")
-    async def random(self, interaction: discord.Interaction):
-      await interaction.response.defer()
-      try:
-        await interaction.followup.send(embed=embedutil("fact","Random Fact"),view=factview(interaction.user.name.capitalize()))
-      except Exception:
-         await interaction.followup.send(embed=embedutil("error",traceback.format_exc()),ephemeral=True)
+    #@fact_cmd.command(name="random",description="Generate a random fact")
+    #async def random(self, interaction: discord.Interaction):
+    #  await interaction.response.defer()
+    #  try:
+    #    await interaction.followup.send(embed=embedutil("fact","Random Fact"),view=factview(interaction.user.name.capitalize()))
+    #  except Exception:
+    #     await interaction.followup.send(embed=embedutil("error",traceback.format_exc()),ephemeral=True)
 
     @fact_cmd.command(name="trigger",description="Forcefully trigger a daily fact")
     async def trigger(self, interaction: discord.Interaction):
