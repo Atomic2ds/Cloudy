@@ -16,7 +16,7 @@ def embedutil(category, content):
     if category == "fact":
         limit = 1
         api_url = 'https://api.api-ninjas.com/v1/facts?limit={}'.format(limit)
-        response = requests.get(api_url, headers={'X-Api-Key': 'WF2RmZkp2/UhwzNRGNQ70A==DYWQG0lCIQNR2ixp'})
+        response = requests.get(api_url, headers={'X-Api-Key': '9060KEZGpC2iPBDBL2uIAQ==xCfeT1jCVGkrVkxz'})
         response_json = json.loads(response.text)
         if 'fact' in response_json[0]:
             response_fact = response_json[0]['fact']
