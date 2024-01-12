@@ -70,7 +70,7 @@ class ows(commands.Cog):
               return
 
             db.ows.update_one({"guild_id": interaction.guild.id},{"$set": {"log_id": channel.id}})
-            await channel.send(embed=embedutil("ows",("logs set",interaction.guild)))
+            await channel.send(embed=embedutil("ows",("logs set",interaction.guild)),view=requestedby(interaction.user))
             await interaction.followup.send(embed=embedutil("success",f"Successfully set {channel.mention} as the one word story logs channel!"))
           else:
             await interaction.followup.send(embed=embedutil("denied","You don't have permission to run this command"))

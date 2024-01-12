@@ -43,7 +43,6 @@ async def process_ows(msg):
                   channel_id = document["log_id"]
                   channel = bot.get_channel(channel_id)
                   em = embedutil("ows",("log",msg.content,msg.author.name.capitalize(),msg.author.avatar,msg.guild.name,"Message was over the 45 character limit"))
-                  await channel.send(embed=em,view=infoview("Automated message"))
               except:
                   await channel.send(embed=embedutil("error",traceback.format_exc()))
 
@@ -53,7 +52,6 @@ async def process_ows(msg):
                   channel_id = document["log_id"]
                   channel = bot.get_channel(channel_id)
                   em = embedutil("ows",("log",msg.content,msg.author.name.capitalize(),msg.author.avatar,msg.guild.name,"Message contained non alpha-numeric characters!"))
-                  await channel.send(embed=em,view=infoview("Automated message"))
                 except:
                   await channel.send(embed=embedutil("error",traceback.format_exc()))
             elif last_author is not None and msg.author.id == last_author:
@@ -62,7 +60,6 @@ async def process_ows(msg):
                   channel_id = document["log_id"]
                   channel = bot.get_channel(channel_id)
                   em = embedutil("ows",("log",msg.content,msg.author.name.capitalize(),msg.author.avatar,msg.guild.name,"User can not send 2 messages in a row in community stories"))
-                  await channel.send(embed=em,view=infoview("Automated message"))
                 except:
                   await channel.send(embed=embedutil("error",traceback.format_exc()))
 
