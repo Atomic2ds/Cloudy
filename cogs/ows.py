@@ -40,7 +40,7 @@ class ows(commands.Cog):
     @story_cmd.command(name="channel",description="Set the channel of the one word story module")
     @app_commands.describe(option="What channel you want the one word story to be in")
     async def story_channel(self, interaction: discord.Interaction, option: discord.TextChannel):
-        await interaction.response.defer()
+        await interaction.response.defer(ephemeral=True)
         try:
          if interaction.user.guild_permissions.manage_guild:
           channel = option
@@ -61,7 +61,7 @@ class ows(commands.Cog):
     @story_cmd.command(name="logs", description="Set your one word story log channel")
     @app_commands.describe(channel="Which channel you want to be the logs channel")
     async def owslogs(self, interaction: discord.Interaction, channel: discord.TextChannel):
-       await interaction.response.defer()
+       await interaction.response.defer(ephemeral=True)
        try:
           if interaction.user.guild_permissions.manage_guild:
 
@@ -93,14 +93,14 @@ class ows(commands.Cog):
             await interaction.response.send_message(embed=embedutil("denied","The one word story is currently not configured yet!"),ephemeral=True)
             return
  
-        await interaction.response.defer()
+        await interaction.response.defer(ephemeral=True)
 
         cursor = client.fun.ows.find({"guild_id": interaction.guild.id,})
         for document in cursor: 
               channel = self.bot.get_channel(document["channel_id"])
               await channel.send(embed=embedutil("ows",("disabled",interaction.guild)),view=requestedby(interaction.user))
               db.ows.delete_many({"guild_id": interaction.guild.id})
-              await interaction.followup.send(embed=embedutil("success",f"Successfully disabled the one word story module and cleared all data associated with it"))
+              await interaction.followup.send(embed=embedutil("success",f"Successfully disabled the one word story module"))
          
       except Exception:
          await interaction.followup.send(embed=embedutil("error",traceback.format_exc()))
