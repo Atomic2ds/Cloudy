@@ -18,6 +18,8 @@ from functions.core import handle_help_command
 import libraries
 from config import client
 
+db = client.core
+
 class core(commands.Cog):
     
     def __init__(self, bot):
@@ -33,6 +35,16 @@ class core(commands.Cog):
     async def help(self, interaction: discord.Interaction):
        type = None
        await handle_help_command(interaction,type,False)
+
+    @app_commands.command(name="alert",description="View the latest update we have sent to the Cloudy Support server")
+    async def alert(self, interaction: discord.Interaction):
+      await interaction.response.defer(ephemeral=True)
+      cursor = db.updates.find()
+      for document in cursor:
+         embed = discord.Embed(title=document["title"], description=document["description"], colour=0x4c7fff)
+         embed.set_author(name=document["name"] + "・Bot Developer")
+         embed.add_field(name="Social Links",value=libraries.SOCIAL_LINKS,inline=False)
+         await interaction.followup.send(embed=embed,ephemeral=True,view=infoview("View our updates channel in our Support Server (Run the /support command)"))
 
     @app_commands.command(name="notify",description="Send a message out to every single module configured channel")
     async def notify(self, interaction: discord.Interaction, msg: str):

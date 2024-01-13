@@ -55,7 +55,7 @@ class autoroles(commands.Cog):
                   new_value = { "$push": { "bot_roles": role.id } }
                   my_query = { "guild_id": interaction.guild.id }
                   client.utils.autoroles.update_one(my_query, new_value)
-                  await interaction.response.followup.send(embed=embedutil("success","Successfully added role to the autoroles list"))
+                  await interaction.followup.send(embed=embedutil("success","Successfully added role to the autoroles list"))
                 else:
                    client.utils.autoroles.insert_one({"guild_id": interaction.guild.id,"bot_roles": [role.id],"human_roles":[]})
                    await interaction.followup.send(embed=embedutil("success","Successfully added role to the autoroles list"))
