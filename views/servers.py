@@ -67,7 +67,6 @@ class statusserversdropdown(discord.ui.Select):
     }
     response = requests.get(f"https://{panel_url}/api/client/servers/{server_id}", headers=headers)
     data = response.json()
-    name = data['attributes']['name']
     description = data['attributes']['description']
 
     response2 = requests.get(f"https://{panel_url}/api/client/servers/{server_id}/resources", headers=headers)
