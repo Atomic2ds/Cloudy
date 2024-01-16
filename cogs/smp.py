@@ -81,6 +81,10 @@ class smp(commands.Cog):
        except Exception:
            await interaction.response.send_message(embed=embedutil("error",traceback.format_exc()),ephemeral=True)
 
+    @smp_cmd.command(name="add",description="Add an extra server to the smp module")
+    async def add(self, interaction: discord.Interaction):
+       await interaction.response.send_message(embed=embedutil("simple","This is still a work in progress, if your a big community or more than just 1 smp than we reccomend our server linker, which has much more features. The smp module is just designed for small or friend group communities"),ephemeral=True)
+
 
 async def setup(bot):
     await bot.add_cog(smp(bot))
