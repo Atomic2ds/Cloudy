@@ -122,7 +122,6 @@ class deleteserversdropdown(discord.ui.Select):
     self.guild_id = guild_id
     options = []
 
-
     for document in db.list.find({"guild_id": self.guild_id,}):
       api_key = document["api_key"]
       panel_url = document["panel_url"]
@@ -142,8 +141,11 @@ class deleteserversdropdown(discord.ui.Select):
 
     if not options:
       options = [discord.SelectOption(label="No Servers Available", description="Add one using /server add")]
+      max_values = 1
+    else:
+      max_values = db.list.count_documents({"guild_id": guild_id})
 
-    super().__init__(placeholder="Select a server...", options=options, min_values=1, max_values=db.list.count_documents({"guild_id": guild_id}), custom_id="deleteserversdropdown")
+    super().__init__(placeholder="Select a server...", options=options, min_values=1, max_values=max_values, custom_id="deleteserversdropdown")
 
   async def callback(self, interaction: discord.Interaction):
    await interaction.response.defer()
