@@ -41,6 +41,9 @@ class statusserversdropdown(discord.ui.Select):
       db.list.update_one({"server_id": server_id}, {"$set": {"name": name}})
       options.append(discord.SelectOption(label=name, description=description))
 
+    if not options:
+      options = [discord.SelectOption(label="No Servers Available", description="Add one using /server add")]
+
     super().__init__(placeholder="Select a server...", options=options, min_values=1, max_values=1, custom_id="statusserversdropdown")
 
 
@@ -106,3 +109,54 @@ def bytes_to_mb(bytes):
 def bytes_to_gb(bytes):
     """Convert bytes to gigabytes and round to 4 decimal places."""
     return round(bytes / (2**30), 2)
+
+
+
+class deleteserversview(discord.ui.View):
+   def __init__(self, guild_id: str):
+      super().__init__(timeout=None)
+      self.add_item(deleteserversdropdown(guild_id))
+
+class deleteserversdropdown(discord.ui.Select):
+  def __init__(self, guild_id: str):
+    self.guild_id = guild_id
+    options = []
+
+
+    for document in db.list.find({"guild_id": self.guild_id,}):
+      api_key = document["api_key"]
+      panel_url = document["panel_url"]
+      server_id = document["server_id"]
+#
+      headers = {'Authorization': f'Bearer {api_key}','Accept': 'application/vnd.pterodactyl.v1+json'}
+      response = requests.get(f"https://{panel_url}/api/client/servers/{server_id}", headers=headers)
+      data = response.json()
+      try:
+        name = data['attributes']['name']
+        description = data['attributes']['description']
+      except:
+        name = f"Unavailable ({panel_url})"
+        description = server_id
+      db.list.update_one({"server_id": server_id}, {"$set": {"name": name}})
+      options.append(discord.SelectOption(label=name, description=description))
+
+    if not options:
+      options = [discord.SelectOption(label="No Servers Available", description="Add one using /server add")]
+
+    super().__init__(placeholder="Select a server...", options=options, min_values=1, max_values=db.list.count_documents({"guild_id": guild_id}), custom_id="deleteserversdropdown")
+
+  async def callback(self, interaction: discord.Interaction):
+   await interaction.response.defer()
+   try:
+    print(self.values)
+    for server in self.values:
+      name = server
+      query = {"name": name}
+      db.list.delete_many(query)
+      
+    await interaction.followup.send(embed=embedutil("success","Successfully deleted your selected server(s) off the system"),ephemeral=True)
+    await interaction.followup.edit_message(message_id=interaction.message.id,view=deleteserversview(interaction.guild.id))
+
+
+   except Exception:
+     await interaction.followup.send(embed=embedutil("error",traceback.format_exc()),ephemeral=True)

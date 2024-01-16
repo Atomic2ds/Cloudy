@@ -17,7 +17,7 @@ from config import client
 import pymongo
 
 from functions.servers import check_server_credentials, grab_server_info
-from views.servers import statusserversview
+from views.servers import statusserversview, deleteserversview
 db = client.servers
 
 
@@ -92,6 +92,15 @@ class servers(commands.Cog):
        await interaction.response.defer()
        try:
          await interaction.followup.send(embed=embedutil("simple","Use the dropdown menu below to select servers currently linked via Cloudy, if you want to add a new server use /server add.\n\nThis module is in an early beta stage and this layout is not final"),view=statusserversview(interaction.guild.id))
+       except Exception:
+          await interaction.followup.send(embed=embedutil("error",traceback.format_exc()))
+
+
+    @server_cmd.command(name="delete",description="Open the server delete menu where you can select servers from the dropdown to delete them")
+    async def delete(self, interaction: discord.Interaction):
+       await interaction.response.defer()
+       try:
+         await interaction.followup.send(embed=embedutil("simple","You can select servers below to remove them from the linked servers list\n\nThis module is in an early beta stage and this layout is not final"),view=deleteserversview(interaction.guild.id))
        except Exception:
           await interaction.followup.send(embed=embedutil("error",traceback.format_exc()))
 
