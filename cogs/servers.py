@@ -16,7 +16,7 @@ from embeds import embedutil
 from config import client
 import pymongo
 
-from functions.servers import check_server_credentials
+from functions.servers import check_server_credentials, grab_server_info
 from views.servers import statusserversview
 db = client.servers
 
