@@ -87,6 +87,7 @@ class smp(commands.Cog):
 
 
     @smp_cmd.command(name="panel",description="Send a panel where members can view status and info of your smp server")
+    @app_commands.describe(channel="Where you want your smp panel to be located/sent")
     async def panel(self, interaction: discord.Interaction, channel: Optional[discord.TextChannel]):
      try:
       if not interaction.permissions.manage_guild:
