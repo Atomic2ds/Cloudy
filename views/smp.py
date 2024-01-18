@@ -7,7 +7,7 @@ from functions.core import infoview
 import libraries
 from config import client
 
-from functions.smp import fetch_server_info, fetch_server_resources, send_detailed_Stats
+from functions.smp import fetch_server_info, fetch_server_resources, send_detailed_Stats, send_smp_info
 db = client.smp
 
 class link_smp_server(ui.Modal, title="Link SMP Server"):
@@ -50,6 +50,16 @@ class smp_status_view(discord.ui.View):
    async def detailedstats(self, interaction: discord.Interaction, button: discord.ui.Button):
       await send_detailed_Stats(interaction, True)
 
-   #@discord.ui.button(label="Server Info", style=discord.ButtonStyle.gray, custom_id="server_info_status_embed", emoji="🌍")
-   #async def serverinfo(self, interaction: discord.Interaction, button: discord.ui.Button):
-   #   pass
+
+      
+class smp_panel_view(discord.ui.View):
+   def __init__(self):
+      super().__init__(timeout=None)
+
+   @discord.ui.button(label="Server Info", style=discord.ButtonStyle.gray, custom_id="detilaed_info_panel_embed", emoji="📑")
+   async def smpserverinfo(self, interaction: discord.Interaction, button: discord.ui.Button):
+      await send_smp_info(interaction, True)
+
+   @discord.ui.button(label="Server Status", style=discord.ButtonStyle.gray, custom_id="detilaed_status_panel_embed", emoji="💙")
+   async def smpserverstatus(self, interaction: discord.Interaction, button: discord.ui.Button):
+      await send_detailed_Stats(interaction, True)

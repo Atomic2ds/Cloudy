@@ -17,7 +17,7 @@ from embeds import embedutil
 from config import client
 import pymongo
 
-from views.smp import link_smp_server, smp_status_view
+from views.smp import link_smp_server, smp_status_view, smp_panel_view
 from functions.smp import fetch_server_info, fetch_server_resources, send_detailed_Stats, send_smp_info
 from views.core import infoview
 db = client.smp
@@ -86,9 +86,22 @@ class smp(commands.Cog):
        await interaction.response.send_message(embed=embedutil("simple","This is still a work in progress, if your a big community or more than just 1 smp than we reccomend our server linker, which has much more features. The smp module is just designed for small or friend group communities"),ephemeral=True)
 
 
-    @smp_cmd.command(name="panel",description="Send a panel where memebers can view status and info of your smp server")
-    async def panel(self, interaction: discord.Interaction, channeL: Optional[discord.TextChannel]):
-       pass
+    @smp_cmd.command(name="panel",description="Send a panel where members can view status and info of your smp server")
+    async def panel(self, interaction: discord.Interaction, channel: Optional[discord.TextChannel]):
+     try:
+      if not interaction.permissions.manage_guild:
+            await interaction.response.send_message(embed=embedutil("denied","You don't have permissions to run this command!"),ephemeral=True)
+            return
+      
+      await interaction.response.defer(ephemeral=True)
+
+      if channel == None:
+         channel = interaction.channel
+      await channel.send(embed=embedutil("smp",interaction),view=smp_panel_view())
+
+      await interaction.followup.send(embed=embedutil("success",f"Successfully sent your servers SMP panel to {channel.mention}"))
+     except Exception:
+        await interaction.followup.send(embed=embedutil("error",traceback.format_exc()))
 
 async def setup(bot):
     await bot.add_cog(smp(bot))
