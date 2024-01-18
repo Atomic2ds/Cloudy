@@ -34,6 +34,8 @@ class servers(commands.Cog):
 
     server_cmd = app_commands.Group(name="server", description="An advanced server linking module for linking servers with pterodactyl")
     
+
+
     server_categories = [
         Choice(name="Minecraft", value="minecraft"),
         Choice(name="Modded Minecraft", value="moddedminecraft"),
@@ -87,11 +89,14 @@ class servers(commands.Cog):
       except Exception:
          await interaction.followup.send(embed=embedutil("error",traceback.format_exc()))
 
+
     @server_cmd.command(name="status",description="View the stats of your linked servers, quickly and easily")
-    async def status(self, interaction: discord.Interaction):
+    @app_commands.describe(category="What kind of game server is this, used for searching your servers if you have a lot of them")
+    @app_commands.choices(category=server_categories)
+    async def status(self, interaction: discord.Interaction, category: Optional[str]):
        await interaction.response.defer()
        try:
-         await interaction.followup.send(embed=embedutil("simple","Use the dropdown menu below to select servers currently linked via Cloudy, if you want to add a new server use /server add.\n\nThis module is in an early beta stage and this layout is not final"),view=statusserversview(interaction.guild.id))
+         await interaction.followup.send(embed=embedutil("simple","Use the dropdown menu below to select servers currently linked via Cloudy, if you want to add a new server use /server add.\n\nThis module is in an early beta stage and this layout is not final"),view=statusserversview(interaction.guild.id,category))
        except Exception:
           await interaction.followup.send(embed=embedutil("error",traceback.format_exc()))
 
@@ -103,6 +108,12 @@ class servers(commands.Cog):
          await interaction.followup.send(embed=embedutil("simple","You can select servers below to remove them from the linked servers list\n\nThis module is in an early beta stage and this layout is not final"),view=deleteserversview(interaction.guild.id))
        except Exception:
           await interaction.followup.send(embed=embedutil("error",traceback.format_exc()))
+
+
+    @server_cmd.command(name="panel",description="Send a server panel where members can easily")
+    async def panel(self, interaction: discord.Interaction, channel: discord.TextChannel):
+       pass
+
 
 async def setup(bot):
     await bot.add_cog(servers(bot))

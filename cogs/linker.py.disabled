@@ -1,0 +1,41 @@
+import discord
+from discord.ext import commands
+from discord import app_commands, ui
+import random
+from discord.app_commands import Choice
+import aiohttp
+import requests
+from typing import Optional
+import json
+import traceback
+import os
+from discord import Webhook
+import libraries
+from datetime import timedelta
+import datetime
+from embeds import embedutil
+from config import client
+import pymongo
+
+from views.smp import link_smp_server, smp_status_view
+from functions.smp import fetch_server_info, fetch_server_resources, send_detailed_Stats, send_smp_info
+from views.core import infoview
+db = client.smp
+
+
+class linker(commands.Cog):
+    
+    def __init__(self, bot):
+        self.bot = bot
+
+    @commands.Cog.listener()
+    async def on_ready(self):
+        print("┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓")
+        print("┃  Loaded the Linker Cog         ┃")
+        print("┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛")
+
+    linker_cmd = app_commands.Group(name="linker", description="Link different channels together on discord")
+
+async def setup(bot):
+    await bot.add_cog(linker(bot))
+

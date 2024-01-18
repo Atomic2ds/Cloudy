@@ -86,6 +86,9 @@ class smp(commands.Cog):
        await interaction.response.send_message(embed=embedutil("simple","This is still a work in progress, if your a big community or more than just 1 smp than we reccomend our server linker, which has much more features. The smp module is just designed for small or friend group communities"),ephemeral=True)
 
 
+    @smp_cmd.command(name="panel",description="Send a panel where memebers can view status and info of your smp server")
+    async def panel(self, interaction: discord.Interaction, channeL: Optional[discord.TextChannel])
+
 async def setup(bot):
     await bot.add_cog(smp(bot))
 
