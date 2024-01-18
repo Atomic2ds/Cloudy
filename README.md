@@ -1,4 +1,4 @@
-About Cloudy
+# About Cloudy
 A small multipurpose discord bot that I sometimes work on when im bored, it is hosted publically and everything on the bot is 100% free to use
 
 # Top Features
