@@ -87,7 +87,8 @@ class smp(commands.Cog):
 
 
     @smp_cmd.command(name="panel",description="Send a panel where memebers can view status and info of your smp server")
-    async def panel(self, interaction: discord.Interaction, channeL: Optional[discord.TextChannel])
+    async def panel(self, interaction: discord.Interaction, channeL: Optional[discord.TextChannel]):
+       pass
 
 async def setup(bot):
     await bot.add_cog(smp(bot))
