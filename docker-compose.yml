@@ -9,7 +9,7 @@ services:
       - mongodb
     environment: 
      TESTING: "false"
-     TOKEN: "MTE4NDA1MzMzODc0OTI4ODQ1OQ.GKdjzE.XHmVI_KrN4oY4o-f6wFpy2TXcL5kSc1iQAvRj8"
+     TOKEN: "MTA5MDkxNzE3NDk5MTkzMzU0MA.GLmMRc.jVI_0kGl_EjjUWXG444WbKLE-bvjG85Jd60amY"
 
   mongodb:
     restart: always
