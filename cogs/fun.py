@@ -13,7 +13,7 @@ import requests
 import config
 import aiohttp
 from embeds import embedutil
-from functions.fun import fetch_gif
+from functions.fun import fetch_gif, get_pexels_image
 from functions.core import infoview
 import libraries
 
@@ -39,6 +39,23 @@ class fun(commands.Cog):
        await interaction.followup.send(embed=embedutil("8ball",question))
       except Exception:
         await interaction.followup.send(embed=embedutil("error",traceback.format_exc()))
+
+    @app_commands.command(name="monkey",description="Grab a monkey picture")
+    async def monkey(self, interaction: discord.Interaction, name: str):
+      if random.randint(1, 1000) == 1:
+         query = "gorilla"
+      else:
+         query = f"monkey named {name}"
+      await interaction.response.defer()
+      api_key = "LUou1G0GPKICgLpylPXedl2akKv08RNHwS435x9TB2NDBnkvh8CYwgjk"
+      image_url = await get_pexels_image(api_key, query)
+      if image_url is not None:
+        embed = discord.Embed(colour=0x4A4A4A,description=f"The monke below is named {name}")
+        embed.set_image(url=image_url)
+        await interaction.followup.send(embed=embed)
+      else:
+        await interaction.followup.send(embed=embedutil("denied","No image found."))
+
 
     @app_commands.command(name="gif", description="Get a random gif or enter a query")
     @app_commands.describe(query="Send a custom query to the Gif API")

@@ -44,7 +44,7 @@ async def img2text(query):
                 embed.set_image(url=random.choice(photos)["src"]["original"])
                 return embed
             
-        embed = embedutil("simple", "Unable to find an image based on your query")
+        embed = embedutil("denied", "Unable to find an image based on your query")
         return embed
 
     except Exception:
