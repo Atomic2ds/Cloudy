@@ -20,10 +20,9 @@ class create_embed(ui.Modal, title="Create Embed"):
 
     async def on_submit(self, interaction: discord.Interaction):
      try:
-   
-
 
       embed = discord.Embed(colour=0x4c7fff, title=self.embed_title, description=self.embed_description)
+      embed.set_author(name=interaction.user.name.capitalize(),icon_url=interaction.user.avatar)
       if not self.embed_footer == None:
          embed.set_footer(text=self.embed_footer)
       if not self.embed_image == None:
@@ -31,7 +30,7 @@ class create_embed(ui.Modal, title="Create Embed"):
       if not self.embed_thumbnail == None:
          embed.set_thumbnail(url=self.embed_thumbnail)
 
-      await interaction.channel.send(embed=embed,view=infoview(f"Created by {interaction.user.name.capitalize()}"))
+      await interaction.channel.send(embed=embed)
       await interaction.response.send_message(embed=embedutil("success",f"Successfully sent your embed to {interaction.channel.mention}"),ephemeral=True)
 
 
