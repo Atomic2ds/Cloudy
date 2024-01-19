@@ -37,7 +37,8 @@ except:
     TESTING = "true"
 
 if TESTING == "false":
-    client = pymongo.MongoClient("mongodb://Atomic:BRafcxzEcGNbRaEKkP58hF4xjbDXRH@bot1.cloud.a3d.pro:39348/")
+    #client = pymongo.MongoClient("mongodb://Atomic:BRafcxzEcGNbRaEKkP58hF4xjbDXRH@bot1.cloud.a3d.pro:39348/")
+    client = pymongo.MongoClient("mongodb://mongodb/")
 else:
     client = pymongo.MongoClient("mongodb://yyX7BeyVoUguQAX69gP6UxrHkXKKtAEdV:ZZFA97mvqYU5s5WhANnPaaPw7LrotjWP8@140.238.206.46:25623/")
 
