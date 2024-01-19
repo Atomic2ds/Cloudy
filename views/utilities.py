@@ -2,6 +2,7 @@ import discord
 from discord import ui
 from embeds import embedutil
 import traceback
+from functions.core import infoview
 
 class avatarview(discord.ui.View):
    def __init__(self, user: str):
@@ -30,7 +31,7 @@ class create_embed(ui.Modal, title="Create Embed"):
       if not self.embed_thumbnail == None:
          embed.set_thumbnail(url=self.embed_thumbnail)
 
-      await interaction.channel.send(embed=embed)
+      await interaction.channel.send(embed=embed,view=infoview(f"Created by {interaction.user.name.capitalize()}"))
       await interaction.response.send_message(embed=embedutil("success",f"Successfully sent your embed to {interaction.channel.mention}"),ephemeral=True)
 
 
