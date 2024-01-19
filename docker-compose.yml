@@ -16,7 +16,7 @@ services:
     image: mongo:latest
     container_name: cloudy-mongodb
     volumes:
-      - mongodb-data:/data/db
+      - mongodb_data:/data/db
 
 volumes:
   mongodb-data:
