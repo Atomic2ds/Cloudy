@@ -76,7 +76,7 @@ class basements(commands.Cog):
     @basement_cmd.command(name="sell", description="Sell someone from your basement")
     @app_commands.describe(name="The name of the person to sell from your basement",value="How much you want to sell your item for")
     async def sell(self, interaction: discord.Interaction, name: str, value: int):
-        await sell_basement_item_function(interaction, str(self.name), str(self.value))
+        await sell_basement_item_function(interaction, str(self.name), str(self.value), False)
 
     #Remove something from the basement store
     @basement_cmd.command(name="unsell", description="Remove something from the Cloudy basement store")
@@ -106,7 +106,8 @@ class basements(commands.Cog):
             for document in cursor:
               name = document["name"]
               description = document["description"]
-              embed.add_field(name=name, value=description)
+              value = document["value"]
+              embed.add_field(name=f"{name} (${value})", value=description)
             if db.basement_store.count_documents({}) < 1:
                 embed.set_footer(text="There is currently nothing in the store")
             else:

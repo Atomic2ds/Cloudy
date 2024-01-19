@@ -13,12 +13,12 @@ import libraries
 
 db = client.fun
 
-async def sell_basement_item_function(interaction, name, value):
+async def sell_basement_item_function(interaction, name, value, ephemeral):
         await interaction.response.defer()
         try:
 
             if db.basement_store.find_one({"user_id": interaction.user.id, "name":name}):
-                await interaction.followup.send(embed=embedutil("denied",f"That person is already up for sale!"))
+                await interaction.followup.send(embed=embedutil("denied",f"That person is already up for sale!"),ephemeral=ephemeral)
                 return
             
             document = db.basements.find_one({"id":interaction.user.id,"name":name})
@@ -26,6 +26,6 @@ async def sell_basement_item_function(interaction, name, value):
             db.basements.delete_many({"name": name,"id":interaction.user.id})
             db.basement_store.insert_one({"user_id": interaction.user.id,"name":name,"description": description,"value":value})
 
-            await interaction.followup.send(embed=embedutil("success",f"Successfully set {name} to be up for sale!"))
+            await interaction.followup.send(embed=embedutil("success",f"Successfully set {name} to be up for sale!"),ephemeral=ephemeral)
         except Exception:
             await interaction.followup.send(embed=embedutil("error",traceback.format_exc()))

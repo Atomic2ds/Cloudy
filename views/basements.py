@@ -33,4 +33,4 @@ class sell_item(ui.Modal, title="Sell Basement Item"):
     value = ui.TextInput(label="Item Value", placeholder="How much you want to sell the item for", style=discord.TextStyle.short, required=True)
 
     async def on_submit(self, interaction: discord.Interaction):
-     await sell_basement_item_function(interaction, str(self.name), str(self.value))
+     await sell_basement_item_function(interaction, str(self.name), str(self.value), True)
