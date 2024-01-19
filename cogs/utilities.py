@@ -16,7 +16,7 @@ from embeds import embedutil
 from functions.core import hyperlink_button
 from functions.other import get_avatar
 from functions.fun import get_definition
-from views.utilities import avatarview
+from views.utilities import avatarview, create_embed
 
 
 class utilities(commands.Cog):
@@ -118,6 +118,13 @@ class utilities(commands.Cog):
         await pollmsg.add_reaction('👎')
      except Exception:
         await interaction.followup.send(embed=embedutil("error",traceback.format_exc())) 
+
+    @app_commands.command(name="embed",description="Send a quick embed")
+    async def embed(self, interaction: discord.Interaction):
+       if not interaction.permissions.manage_guild:
+         await interaction.response.send_message(embed=embedutil("denied","You don't have permission to run this command!"),ephemeral=True)
+         return
+       await interaction.response.send_modal(create_embed())
 
     #Echo Command
     @app_commands.command(name="echo", description=f"Send a message as as the Donald Bot")
