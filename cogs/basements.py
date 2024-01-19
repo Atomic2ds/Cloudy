@@ -49,6 +49,9 @@ class basements(commands.Cog):
             if db.basements.find_one({"id": interaction.user.id, "name": name}):
                 await interaction.response.send_message(embed=embedutil("denied","That person already exists in your basement"),ephemeral=True)
                 return
+            if db.basements.count_documents({"id": interaction.user.id}) == 25:
+              await interaction.followup.send(embed=embedutil("denied","You have reached the limit on how many people you can have in your basement!"),ephemeral=True)
+              return
             await interaction.response.defer()
             db.basements.insert_one({"id": interaction.user.id,"name": name,"description": description,})
             await interaction.followup.send(embed=embedutil("success",f"Successfully added `{name}` to your basement"))
