@@ -11,7 +11,10 @@ class avatarview(discord.ui.View):
       self.add_item(discord.ui.Button(label="Avatar URL", url=f"{self.user.avatar}"))
       self.add_item(discord.ui.Button(label=f"{self.user.name.capitalize()}'s Avatar",style=discord.ButtonStyle.gray, disabled=True))
 
+
+
 class create_embed(ui.Modal, title="Create Embed"):
+
     embed_title = ui.TextInput(label="Embed Title", placeholder="What you want the name of the embed to be", style=discord.TextStyle.short, required=False)
     embed_description = ui.TextInput(label="Embed Description", placeholder="What you want the embed description to be", style=discord.TextStyle.long, required=False)
     embed_footer = ui.TextInput(label="Embed Footer", placeholder="What you want the embed footer to be", style=discord.TextStyle.short, required=False)

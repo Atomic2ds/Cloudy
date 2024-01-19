@@ -121,10 +121,13 @@ class utilities(commands.Cog):
 
     @app_commands.command(name="embed",description="Send a quick embed")
     async def embed(self, interaction: discord.Interaction):
+      try:
        if not interaction.permissions.manage_guild:
          await interaction.response.send_message(embed=embedutil("denied","You don't have permission to run this command!"),ephemeral=True)
          return
        await interaction.response.send_modal(create_embed())
+      except Exception:
+         await interaction.response.send_message(embed=embedutil("error",traceback.format_exc()),ephemeral=True)
 
     #Echo Command
     @app_commands.command(name="echo", description=f"Send a message as as the Donald Bot")
