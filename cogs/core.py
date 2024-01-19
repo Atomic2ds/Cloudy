@@ -38,13 +38,13 @@ class core(commands.Cog):
 
     @app_commands.command(name="alert",description="View the latest update we have sent to the Cloudy Support server")
     async def alert(self, interaction: discord.Interaction):
-      await interaction.response.defer(ephemeral=True)
+      await interaction.response.defer()
       cursor = db.updates.find()
       for document in cursor:
          embed = discord.Embed(title=document["title"], description=document["description"], colour=0x4c7fff)
          embed.set_author(name=document["name"] + "・Bot Developer")
          embed.add_field(name="Social Links",value=libraries.SOCIAL_LINKS,inline=False)
-         await interaction.followup.send(embed=embed,ephemeral=True,view=infoview("View our updates channel in our Support Server (Run the /support command)"))
+         await interaction.followup.send(embed=embed)
 
     @app_commands.command(name="notify",description="Send a message out to every single module configured channel")
     async def notify(self, interaction: discord.Interaction, msg: str):
@@ -114,8 +114,8 @@ class core(commands.Cog):
     @app_commands.command(name="update", description="Send an update for Cloudy to the updates channel")
     @app_commands.describe(title="The title of the Update", description="What the update is about", mention="What role to mention on the update message", file="What file to attach to the update")
     async def updateslash(self, interaction: discord.Interaction, title: str, description: str, mention: Optional[discord.Role], file: Optional[discord.Attachment], channel: Optional[discord.TextChannel]):
+      await interaction.response.defer(ephemeral=True)
       try:
-         await interaction.response.defer(ephemeral=True)
 
          if interaction.user.id == 612522818294251522:
            if channel == None:
@@ -139,6 +139,11 @@ class core(commands.Cog):
                    await channel.send(file=file_obj)
                 except:
                    pass
+            
+            if db.updates.find({}):
+              db.updates.delete_many({})
+              
+            db.updates.insert_one({"title": title,"description": description,"name": interaction.user.name.capitalize(),})
             
            await interaction.followup.send(embed=embedutil("success",f"Successfully sent the update for Cloudy"))
 
