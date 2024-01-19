@@ -57,7 +57,7 @@ class economy(commands.Cog):
             footer = balance_quotes(balance)
         else:
             title = f"{user.name.capitalize()}'s Account Balance"
-            description = f"They currently has ${balance} in their bank account"
+            description = f"They currently have ${balance} in their bank account"
             footer = "This is not your bank account"
             if balance < 20:
                 footer = footer + " (Surprisingly)"
@@ -69,6 +69,7 @@ class economy(commands.Cog):
 
       except Exception:
           await interaction.followup.send(embed=embedutil("error",traceback.format_exc()))
+
 
 
 async def setup(bot):
