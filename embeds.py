@@ -10,7 +10,18 @@ import requests
 def embedutil(category, content):
   try:
     if category == "smp":
-        embed = discord.Embed(colour=0x4c7fff, title=f"SMP panel for {content.guild.name}", description="Click the buttons below to view information about the currently linked smp and also current running status and stats like cpu usage, memory usage and disk usage")
+        
+        if content[1]  != None:
+            title = content[1].replace("{guild_name}",content[0])
+        else:
+            title = f"SMP panel for {content[0]}"
+
+        if content[2] != None:
+            description = content[2].replace("{guild_name}",content[0])
+        else:
+            description="Click the buttons below to view information about the currently linked smp and also current running status and stats like cpu usage, memory usage and disk usage"
+
+        embed = discord.Embed(colour=0x4c7fff, title=title, description=description)
 
     if category == "img2text":
         query = content

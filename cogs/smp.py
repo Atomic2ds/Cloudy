@@ -87,8 +87,8 @@ class smp(commands.Cog):
 
 
     @smp_cmd.command(name="panel",description="Send a panel where members can view status and info of your smp server")
-    @app_commands.describe(channel="Where you want your smp panel to be located/sent")
-    async def panel(self, interaction: discord.Interaction, channel: Optional[discord.TextChannel]):
+    @app_commands.describe(channel="Where you want your smp panel to be located/sent",title="What the title of your smp panel embed should be",description="What the description of your smp panel embed should be")
+    async def panel(self, interaction: discord.Interaction, channel: Optional[discord.TextChannel], title: Optional[str], description: Optional[str]):
      try:
       if not interaction.permissions.manage_guild:
             await interaction.response.send_message(embed=embedutil("denied","You don't have permissions to run this command!"),ephemeral=True)
@@ -98,11 +98,23 @@ class smp(commands.Cog):
 
       if channel == None:
          channel = interaction.channel
-      await channel.send(embed=embedutil("smp",interaction),view=smp_panel_view())
+      await channel.send(embed=embedutil("smp",(interaction.guild.name,title,description)),view=smp_panel_view())
 
       await interaction.followup.send(embed=embedutil("success",f"Successfully sent your servers SMP panel to {channel.mention}"))
      except Exception:
         await interaction.followup.send(embed=embedutil("error",traceback.format_exc()))
+
+    @smp_cmd.command(name="variables",description="What variables you can use in the smp panel")
+    async def variables(self, interaction: discord.Interaction):
+       await interaction.response.defer()
+       try:
+          embed = discord.Embed(colour=0x4c7fff, title="SMP Panel Variables",description="Below you can see the different variables you can use when making an smp panel")
+          embed.add_field(name="{guild_name}",value="Grabs the name of your discord server and puts it in plain text")
+          #embed.add_field(name="{smp_name}",value="Simply just fetches the name of your smp server")
+          embed.set_footer(text="Use these in /smp panel description/title variables")
+          await interaction.followup.send(embed=embed)
+       except Exception:
+          await interaction.followup.send(embed=embedutil("error",traceback.format_exc()))
 
 async def setup(bot):
     await bot.add_cog(smp(bot))

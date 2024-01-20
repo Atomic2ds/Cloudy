@@ -92,7 +92,6 @@ class fun(commands.Cog):
       except Exception:
          await interaction.followup.delete_message()
          await interaction.followup.send(embed=embedutil("error",traceback.format_exc()),ephemeral=True)
-         #await interaction.followup.send(embed=embedutil("simple","We are aware of issues with this command and are working to fix it"),ephemeral=True)
 
     @app_commands.command(name="template", description="Put a users face on one of our Templates!")
     @app_commands.describe(type="Which Template to use for the image", user="What users face you want to put on the Template")
@@ -101,38 +100,28 @@ class fun(commands.Cog):
       Choice(name="Wanted Template", value="wanted"),
       Choice(name="NPC Template", value="npc"),
     ])
-    async def template(self, interaction: discord.Interaction, type: str, user: discord.User):
+    async def template(self, interaction: discord.Interaction, type: str, user: Optional[discord.User]):
       await interaction.response.defer()
       try:
         if user is None:
-            user = interaction.user
+            user = random.choice(interaction.guild.members)
 
+        data = BytesIO(await user.display_avatar.read())
+        template = Image.open(f"./images/templates/{type}-template.jpg")
+        pfp = Image.open(data)
+ 
         if type == "nerd":
-            wanted = Image.open("./images/templates/nerd-template.jpg")
-            data = BytesIO(await user.display_avatar.read())
-            pfp = Image.open(data)
-            pfp = pfp.resize((100, 100))
-            wanted.paste(pfp, (80, 5))
-            result_path = "./images/results/nerd-result.jpg"
-            wanted.save(result_path)
-
+           pfp = pfp.resize((100, 100))
+           template.paste(pfp, (80, 5))
         elif type == "wanted":
-            wanted = Image.open("./images/templates/wanted-template.jpg")
-            data = BytesIO(await user.display_avatar.read())
-            pfp = Image.open(data)
-            pfp = pfp.resize((275, 275))
-            wanted.paste(pfp, (85, 160))
-            result_path = "./images/results/wanted-result.jpg"
-            wanted.save(result_path)
-
-        elif type == "npc":
-            npc = Image.open("./images/templates/npc-template.jpg")
-            data = BytesIO(await user.display_avatar.read())
-            pfp = Image.open(data)
-            pfp = pfp.resize((125, 125))
-            npc.paste(pfp, (60, 40))
-            result_path = "./images/results/npc-result.jpg"
-            npc.save(result_path)
+           pfp = pfp.resize((275, 275))
+           template.paste(pfp, (85, 160))
+        elif type =="npc":
+           pfp = pfp.resize((125, 125))
+           template.paste(pfp, (60, 40))
+        
+        result_path = f"./images/results/{type}-result.jpg"
+        template.save(result_path)
 
         file = discord.File(result_path)
         await interaction.followup.send(file=file,view=infoview(f"User: {user.name.capitalize()}"))
