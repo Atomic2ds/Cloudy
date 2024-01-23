@@ -168,7 +168,7 @@ async def main():
     if config.TOKEN == None:
       print("Unable to boot the bot, no token env was set")
     else:
-      uptime_ping()
+      #uptime_ping()
       await bot.start(config.TOKEN)
       
 
