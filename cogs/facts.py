@@ -34,6 +34,7 @@ class fact(commands.Cog):
     fact_cmd = app_commands.Group(name="fact", description="Set a fact of the day channel")
 
     @fact_cmd.command(name="channel", description="Choose where daily facts will be sent to")
+    @app_commands.describe(option="The place you want Daily Facts to be sent to")
     async def fact_channel(self, interaction: discord.Interaction, option: discord.TextChannel):
        try:
          if interaction.user.guild_permissions.manage_guild:

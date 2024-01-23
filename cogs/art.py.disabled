@@ -1,22 +1,28 @@
 import discord
 from discord.ext import commands
-from discord import app_commands
+from discord import app_commands, ui
 import random
-from typing import Optional
-import os
 from discord.app_commands import Choice
-import datetime
+import aiohttp
+import requests
+from typing import Optional
 import json
 import traceback
-import io
-import requests
-import config
-import aiohttp
+import os
+from discord import Webhook
+import libraries
+from datetime import timedelta
+import datetime
 from embeds import embedutil
 from config import client
-db = client.utils
+import pymongo
+from functions.ows import publish_story, reset_ows, delete_story, read_story, requestedby, get_words_in_cache
+from views.ows import compileview, storiesview
 
-class artcog(commands.Cog):
+db = client.fun
+
+
+class art(commands.Cog):
     
     def __init__(self, bot):
         self.bot = bot
@@ -27,54 +33,22 @@ class artcog(commands.Cog):
         print("┃  Loaded the Art Cog            ┃")
         print("┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛")
 
-    art_cmd = app_commands.Group(name="art", description="Configure and run your own Art Channel!")
+    art_cmd = app_commands.Group(name="art", description="Commands related to the Art Module")
 
-    @art_cmd.command(name="channel",description="Set a channel for all art to go to")
+    @art_cmd.command(name="channel",description="Set a channel for art to be sent to")
+    @app_commands.describe(option="What channel you want art approved by mods to be sent to")
     async def art_channel(self, interaction: discord.Interaction, option: discord.TextChannel):
-        await interaction.response.defer()
-        try:
-         if interaction.user.guild_permissions.manage_guild:
-          channel = option
-          if db.art.find_one({"guild_id": interaction.guild.id}):
-            db.art.update_one({"guild_id": interaction.guild.id},{"$set": {"channel_id": channel.id}})
-          else:
-            db.art.insert_one({"guild_id": interaction.guild.id,"channel_id": channel.id,"submissions_chanel": None})
-          await channel.send(embed=embedutil("art","enabled"))
-          await interaction.followup.send(embed=embedutil("success",f"Successfully set {channel.mention} as the art channel!"))
-         else:
-            await interaction.followup.send(embed=embedutil("denied","Your don't have permission to run this command"))
-        except Exception:
-            await interaction.followup.send(embed=embedutil("error",traceback.format_exc()))
+        pass
 
-    @art_cmd.command(name="apply",description="Apply for your art to be featured on the art channel")
-    async def apply_art(self, interaction: discord.Interaction, image: Optional[discord.Attachment], image_url: Optional[str], name: str, description: str):
-       await interaction.response.defer(ephemeral=True)
-       try:
-          if image == None and image_url == None:
-             await interaction.followup.send(embed=embedutil("denied","You have to upload either a imgae file or a image url"))
-             return
-          
-          if not image == None and not image_url == None:
-             await interaction.followup.send(embed=embedutil("denied","You have to upload either a imgae file or a image url, not both"))
-             return
+    @art_cmd.command(name="submissions",description="Set the channel for art submissions to be reviewed")
+    @app_commands.describe(channel="The channel where art is sent to be approved by mods")
+    async def submissions(self, interaction: discord.Interaction, channel: discord.TextChannel):
+        pass
 
-          if not "https" in image_url:
-             await interaction.followup.send(embed=embedutil("denied","You entered an invalid image url"))
-             return
-          
-          
-          
-          
-       except Exception:
-          await interaction.followup.send(embed=embedutil("error",traceback.format_exc()))
-       
+    @art_cmd.command(name="submit",description="Submit a piece of art to be sent to the art channel!")
+    @app_commands.describe(image="The art you want to submit, preferrably upload a .png, .jpeg or .jpg",name="What you want your art to be called",description="A simple description of what your art is about or whats in your art")
+    async def submit_art(self, interaction: discord.Interaction, image: discord.Attachment, name: str, description: str):
+        pass
 
 async def setup(bot):
-    await bot.add_cog(artcog(bot))
-
-async def fetch_data(url, headers):
-    async with aiohttp.ClientSession() as session:
-        async with session.get(url, headers=headers) as response:
-            # Assuming the response is in JSON format
-            data = await response.json()
-            return data
+    await bot.add_cog(art(bot))
