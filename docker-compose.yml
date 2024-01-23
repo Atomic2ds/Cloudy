@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  discord-bot:
+    restart: always
+    build: .
+    container_name: cloudy-bot
+    depends_on:
+      - mongodb
+    environment: 
+     TESTING: "false"
+     TOKEN: "MTA5MDkxNzE3NDk5MTkzMzU0MA.GLmMRc.jVI_0kGl_EjjUWXG444WbKLE-bvjG85Jd60amY"
+
+  mongodb:
+    restart: always
+    image: mongo:latest
+    container_name: cloudy-mongodb
+    volumes:
+      - mongodb_data:/data/db
+
+volumes:
+  mongodb_data:
