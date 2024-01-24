@@ -53,7 +53,7 @@ class voteview(discord.ui.View):
 class supportview(discord.ui.View):
    def __init__(self):
       super().__init__(timeout=None)
-      self.add_item(discord.ui.Button(label="Support Server", url="https://discord.gg/DUFfRvBXnk"))
+      self.add_item(discord.ui.Button(label="Support Server", url="https://discord.gg/jbzxX2FdNn"))
 
 class documentationview(discord.ui.View):
    def __init__(self):
