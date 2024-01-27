@@ -41,7 +41,7 @@ class images(commands.Cog):
          except Exception:
             await interaction.followup.send(embed=embedutil("error",traceback.format_exc()))
        else:
-          await interaction.followup.send(embed=embedutil("error","You need the manage guild permission to run this command"))
+          await interaction.followup.send(embed=embedutil("denied","You need the manage guild permission to run this command"))
 
     
     @image_cmd.command(name="disable",description="Disable the text to image channel")
@@ -60,7 +60,7 @@ class images(commands.Cog):
           
           await interaction.followup.send(embed=embedutil("success","Successfully disabled the image to text channel"))
          except Exception:
-            await interaction.followup.send(embed=embedutil("error","You need the manage guild permission to run this command"))
+            await interaction.followup.send(embed=embedutil("denied","You need the manage guild permission to run this command"))
       except Exception:
           await interaction.followup.send(embed=embedutil("error",traceback.format_exc()))
 
@@ -79,7 +79,7 @@ class images(commands.Cog):
             db.config.insert_one({"guild_id": interaction.guild.id,"status": "enabled",})
           await interaction.followup.send(embed=embedutil("success","Successfully enabled the image to text channel"))
         else:
-            await interaction.followup.send(embed=embedutil("error","You need the manage guild permission to run this command"))
+            await interaction.followup.send(embed=embedutil("denied","You need the manage guild permission to run this command"))
       except Exception:
         await interaction.followup.send(embed=embedutil("erorr",traceback.format_exc()))
 

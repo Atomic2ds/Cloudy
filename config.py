@@ -28,6 +28,8 @@ class BotClient(commands.Bot):
         self.add_view(aboutview())
         self.add_view(notify_buttons())
         self.add_view(smp_panel_view())
+        from views.art import submission_buttons
+        self.add_view(submission_buttons())
 
 bot = BotClient()
 
