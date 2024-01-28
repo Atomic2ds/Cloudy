@@ -66,7 +66,7 @@ def embedutil(category, content):
 
     if category == "art":
         if content == "enabled_submissions":
-            embed = discord.Embed(colour=0x4c7fff, title="Submissions channel set", description="This is the place where staff will approve or deny art submissions, we reccomend making this channel private")
+            embed = discord.Embed(colour=0x4c7fff, title="Submissions channel set", description="This is the place where staff will approve or deny art submissions, we recommend making this channel private")
             embed.add_field(name="Social Links",value=libraries.SOCIAL_LINKS,inline=False)
         if content == "enabled_showcase":
             embed = discord.Embed(colour=0x4c7fff, title="Showcase channel set", description="Members can now apply to have their art posted and featured on this channel, use the command /art apply to apply to have your art posted")

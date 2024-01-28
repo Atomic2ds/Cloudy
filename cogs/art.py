@@ -42,6 +42,10 @@ class art(commands.Cog):
     async def art_channel(self, interaction: discord.Interaction, submissions_channel: discord.TextChannel, showcase_channel: discord.TextChannel):
       await interaction.response.defer(ephemeral=True)
       try:
+         if db.art.find_one({"guild_id": interaction.guild.id}):
+              await interaction.followup.send(embed=embedutil("denied","The art module is already configured! Use /art set to manually set channels"))
+              return
+
          if interaction.user.guild_permissions.manage_guild:
           if db.art.find_one({"guild_id": interaction.guild.id}):
             db.art.update_one({"guild_id": interaction.guild.id},{"$set": {"public_channel": showcase_channel.id,"submissions_channel":submissions_channel.id}})
@@ -82,6 +86,35 @@ class art(commands.Cog):
          await interaction.followup.send(embed=embedutil("error",traceback.format_exc()))
 
 
+    @art_cmd.command(name="set",description="Manually set a channel after configuring if you need to change it")
+    @app_commands.describe(type="If this channel should be set as the submissions channel or showcase channel!",channel="What channel to actually configure to be used as this")
+    @app_commands.choices(type=[
+      Choice(name="Submissions", value="submissions"),
+      Choice(name="Showcase", value="showcase"),
+    ])
+    async def art_set(self, interaction: discord.Interaction, type: str, channel: discord.TextChannel):
+      await interaction.response.defer(ephemeral=True)
+      try:
+         if not db.art.find_one({"guild_id": interaction.guild.id}):
+              await interaction.followup.send(embed=embedutil("denied","The art module is currently not configured yet!"))
+              return
+         if not interaction.permissions.manage_guild:
+            await interaction.response.send_message(embed=embedutil("denied","You don't have permissions to run this command!"),ephemeral=True)
+            return
+
+         if db.art.find_one({"guild_id": interaction.guild.id}):
+            if type == "showcase":
+               db.art.update_one({"guild_id": interaction.guild.id},{"$set": {"public_channel": channel.id}})
+            elif type == "submissions":
+               db.art.update_one({"guild_id": interaction.guild.id},{"$set": {"submissions_channel":channel.id}})
+
+         await channel.send(embed=embedutil("art",f"enabled_{type}"),view=requestedby(interaction.user))
+            
+
+         await interaction.followup.send(embed=embedutil("success",f"Successfully set {channel.mention} as the {type} channel"))
+      except Exception:
+            await interaction.followup.send(embed=embedutil("error",traceback.format_exc()))
+
 
     @art_cmd.command(name="submit",description="Submit a piece of art to be sent to the art channel!")
     @app_commands.describe(image="The art you want to submit, preferrably upload a .png, .jpeg or .jpg",name="What you want your art to be called",description="A simple description of what your art is about or whats in your art")
@@ -90,6 +123,9 @@ class art(commands.Cog):
         try:
           if not db.art.find_one({"guild_id": interaction.guild.id}):
               await interaction.followup.send(embed=embedutil("denied","The art module is currently not configured yet!"))
+              return
+          if db.art_submissions.count_documents({"art_author": interaction.user.id,"guild_id":interaction.guild.id}) == 2:
+              await interaction.followup.send(embed=embedutil("denied","You have reached the limit on how many art submissions you can have open at once on this server! (2)"),ephemeral=True)
               return
 
           embed = discord.Embed(colour=0x4c7fff, title=name, description=description)
@@ -109,6 +145,7 @@ class art(commands.Cog):
              await interaction.followup.send(embedutil("simple","I was unable to send you a dm, please open your dms on this server so I can dm you when your art is either approved or denied"))
         except Exception:
            await interaction.followup.send(embed=embedutil("error",traceback.format_exc()))
+
 
 
 
