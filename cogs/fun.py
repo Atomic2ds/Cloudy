@@ -75,7 +75,6 @@ class fun(commands.Cog):
       Choice(name="r/dankmemes", value="dankmemes"),
       Choice(name="r/memes", value="memes"),
       Choice(name="r/surrealmemes", value="surrealmemes"),
-      Choice(name="r/funny", value="funny"),
       Choice(name="r/terriblefacebookmemes", value="terriblefacebookmemes"), 
       Choice(name="r/wholesomememes", value="wholesomememes"), 
     ])
@@ -83,14 +82,13 @@ class fun(commands.Cog):
       await interaction.response.defer()
       try:
         if subreddit == None:
-          subreddits = ("dankmemes","memes","surrealmemes","funny","memeeconomy","wholesomememes","terriblefacebookmemes")
+          subreddits = ("dankmemes","memes","surrealmemes","wholesomememes","terriblefacebookmemes")
           subreddit = random.choice(subreddits)
         async with aiohttp.ClientSession() as cs:
           async with cs.get(f'https://www.reddit.com/r/{subreddit}/new.json?sort=hot') as r:
              res = await r.json()
              await interaction.followup.send(embed=embedutil("meme",(res['data']['children'] [random.randint(0, 25)]['data']['url'],subreddit)))
       except Exception:
-         await interaction.followup.delete_message()
          await interaction.followup.send(embed=embedutil("error",traceback.format_exc()),ephemeral=True)
 
     @app_commands.command(name="template", description="Put a users face on one of our Templates!")
