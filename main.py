@@ -144,6 +144,7 @@ async def main():
       print("Invalid Bot Choice, Deploying on Bot 1")
       botchoice = "1"
 
+
     #Asking the user what cogs to load
     cogschoices = input("List cogs you want to load: ")
     if cogschoices == "all" or cogschoices == "":

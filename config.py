@@ -39,7 +39,6 @@ except:
     TESTING = "true"
 
 if TESTING == "false":
-    #client = pymongo.MongoClient("mongodb://Atomic:BRafcxzEcGNbRaEKkP58hF4xjbDXRH@bot1.cloud.a3d.pro:39348/")
     client = pymongo.MongoClient("mongodb://mongodb/")
     #client = pymongo.MongoClient("mongodb://gX4Sn6NM47HzQTpqfHzWVet4VTyAct8s5N:3oC7q4sPKfsPJU32pRgdGbFEvEAKi6bopYWtXTfqQiNYLokeMFKgZtyQP5SixPSsAuoW@45.11.229.137:8002/")
 else:

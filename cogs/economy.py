@@ -71,6 +71,8 @@ class economy(commands.Cog):
           await interaction.followup.send(embed=embedutil("error",traceback.format_exc()))
 
 
+    #@app_commands.command(name="beg",description="Beg for some money from the bank, unlikely you get any though")
+
 
 async def setup(bot):
     await bot.add_cog(economy(bot))

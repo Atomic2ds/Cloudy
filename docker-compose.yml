@@ -12,7 +12,6 @@ services:
     environment: 
      TESTING: "false"
      TOKEN: "MTA5MDkxNzE3NDk5MTkzMzU0MA.GLmMRc.jVI_0kGl_EjjUWXG444WbKLE-bvjG85Jd60amY"
-     #TOKEN: "MTE4NDA1MzMzODc0OTI4ODQ1OQ.GKdjzE.XHmVI_KrN4oY4o-f6wFpy2TXcL5kSc1iQAvRj8"
 
   #The main database cloudy uses for data storage
   mongodb:
@@ -22,21 +21,6 @@ services:
     volumes:
       - mongodb_data:/data/db
 
-  #website:
-  #  restart: always
-  #  build: ./Cloudy-Website/
-  #  container_name: cloudy-website
-  #  ports:
-  #    - 8000:8000
-
-#  Deploying the proxy in front of the Dashboard and Main Website
-  #nginx:
-  #  build:
-  #    context: ./nginx/
-  #  ports:
-  #    - "80:80"  # Map host port 80 to container port 80
-  #  volumes:
-  #    - ./nginx/nginx.conf:/etc/nginx/nginx.conf  # Mount local nginx.conf to NGINX container
 
 volumes:
   mongodb_data:
