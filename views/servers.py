@@ -57,7 +57,13 @@ class statusserversdropdown(discord.ui.Select):
 
   async def callback(self, interaction: discord.Interaction):
    await interaction.response.defer()
+
    try:
+    if self.values[0] == "No Servers Available":
+     await interaction.followup.send(embed=embedutil("denied","You need to add a server before you can view the status of one!"),ephemeral=True)
+     return
+
+
     name = self.values[0]
     query = {"name": name}
     results = db.list.find(query)
@@ -109,7 +115,7 @@ class statusserversdropdown(discord.ui.Select):
     embed.add_field(name="Social Links",value=libraries.SOCIAL_LINKS,inline=False)
 
     #await interaction.followup.send(embed=embed,ephemeral=True)
-    await interaction.followup.edit_message(embed=embed,message_id=interaction.message.id,view=serverstatusview())
+    await interaction.followup.edit_message(embed=embed,message_id=interaction.message.id,view=serverstatusview(panel_url))
 
    except Exception:
      await interaction.followup.send(embed=embedutil("error",traceback.format_exc()),ephemeral=True)
@@ -130,12 +136,18 @@ def mb_to_gb(megabytes):
     return round(megabytes / 1024, 2)
 
 class serverstatusview(discord.ui.View):
-  def __init__(self):
+  def __init__(self, label: str):
+     self.label = label
      super().__init__(timeout=None)
+     self.add_item(discord.ui.Button(label=self.label,style=discord.ButtonStyle.gray, disabled=True))
 
   @discord.ui.button(label="Go Back", style=discord.ButtonStyle.gray, custom_id="gobacktoserverlist")
   async def gobacktostatuslist(self, interaction: discord.Interaction, button: discord.ui.Button):
-      pass
+       await interaction.response.defer()
+       try:
+         await interaction.followup.edit_message(embed=embedutil("simple","Use the dropdown menu below to select servers currently linked via Cloudy, if you want to add a new server use /server add.\n\nThis module is in an early beta stage and this layout is not final"),view=statusserversview(interaction.guild.id,None),message_id=interaction.message.id)
+       except Exception:
+          await interaction.followup.send(embed=embedutil("error",traceback.format_exc()))
 
 
 
