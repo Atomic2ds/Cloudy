@@ -96,7 +96,7 @@ class servers(commands.Cog):
     async def status(self, interaction: discord.Interaction, category: Optional[str]):
        await interaction.response.defer()
        try:
-         await interaction.followup.send(embed=embedutil("simple","Use the dropdown menu below to select servers currently linked via Cloudy, if you want to add a new server use /server add.\n\nThis module is in an early beta stage and this layout is not final"),view=statusserversview(interaction.guild.id,category))
+         await interaction.followup.send(embed=embedutil("servers","status"),view=statusserversview(interaction.guild.id,category))
        except Exception:
           await interaction.followup.send(embed=embedutil("error",traceback.format_exc()))
 
@@ -105,7 +105,7 @@ class servers(commands.Cog):
     async def delete(self, interaction: discord.Interaction):
        await interaction.response.defer()
        try:
-         await interaction.followup.send(embed=embedutil("simple","You can select servers below to remove them from the linked servers list\n\nThis module is in an early beta stage and this layout is not final"),view=deleteserversview(interaction.guild.id))
+         await interaction.followup.send(embed=embedutil("servers","delete"),view=deleteserversview(interaction.guild.id))
        except Exception:
           await interaction.followup.send(embed=embedutil("error",traceback.format_exc()))
 

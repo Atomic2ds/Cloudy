@@ -9,6 +9,18 @@ import requests
 
 def embedutil(category, content):
   try:
+
+    if category == "servers":
+        if content == "status":
+         embed = discord.Embed(colour=0x4c7fff, title="Server Linker Status",description="View the status of a server linked to your discord server by using the dropdown menu below")
+         embed.add_field(name="Adding servers",value="You can add a server to this menu by using the /server add command, then you can enter a server id, panel url and api key",inline=False)
+         embed.set_footer(text="This module is in beta, report any bugs to our support server")
+         embed.add_field(name="Social Links",value=libraries.SOCIAL_LINKS,inline=False)
+        elif content == "delete":
+         embed = discord.Embed(colour=0x4c7fff, title="Linked Server Deleter",description="Select as many servers as you want from the dropdown menu below and we will remove them from your server list")
+         embed.set_footer(text="This module is in beta, report any bugs to our support server")
+         embed.add_field(name="Social Links",value=libraries.SOCIAL_LINKS,inline=False)
+
     if category == "smp":
         
         if content[1]  != None:
