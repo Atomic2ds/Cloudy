@@ -84,6 +84,9 @@ class serverstatusview(discord.ui.View):
 
   @discord.ui.button(label="Go Back", style=discord.ButtonStyle.gray, custom_id="gobacktoserverlist")
   async def gobacktostatuslist(self, interaction: discord.Interaction, button: discord.ui.Button):
+       if not interaction.permissions.manage_guild:
+        await interaction.response.send_message(embed=embedutil("denied","You don't have permissions to run this command!"),ephemeral=True)
+        return
        await interaction.response.defer()
        try:
          await interaction.followup.edit_message(embed=embedutil("servers","status"),view=statusserversview(interaction.guild.id,None),message_id=interaction.message.id)
@@ -129,6 +132,9 @@ class deleteserversdropdown(discord.ui.Select):
     super().__init__(placeholder="Select a server...", options=options, min_values=1, max_values=max_values, custom_id="deleteserversdropdown")
 
   async def callback(self, interaction: discord.Interaction):
+   if not interaction.permissions.manage_guild:
+      await interaction.response.send_message(embed=embedutil("denied","You don't have permissions to run this command!"),ephemeral=True)
+      return
    await interaction.response.defer()
    try:
     print(self.values)

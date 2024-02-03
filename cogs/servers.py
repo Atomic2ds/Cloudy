@@ -68,6 +68,9 @@ class servers(commands.Cog):
     @app_commands.describe(category="What kind of game server is this, used for searching your servers if you have a lot of them",apikey="Get this from the pterodactyl panel account settings, Dashboard > Account > API Credentials",serverid="The id of the server on the panel, Dashboard > Your Server > Settings > Debug Information",panelurl="The url of your providers server dashboard, don't include the https:// part")
     @app_commands.choices(category=server_categories)
     async def add(self, interaction: discord.Interaction, category: str, apikey: str, serverid: str, panelurl: str):
+      if not interaction.permissions.manage_guild:
+        await interaction.response.send_message(embed=embedutil("denied","You don't have permissions to run this command!"),ephemeral=True)
+        return
       await interaction.response.defer(ephemeral=True)
       try:
 
@@ -103,6 +106,9 @@ class servers(commands.Cog):
 
     @server_cmd.command(name="delete",description="Open the server delete menu where you can select servers from the dropdown to delete them")
     async def delete(self, interaction: discord.Interaction):
+       if not interaction.permissions.manage_guild:
+        await interaction.response.send_message(embed=embedutil("denied","You don't have permissions to run this command!"),ephemeral=True)
+        return
        await interaction.response.defer()
        try:
          await interaction.followup.send(embed=embedutil("servers","delete"),view=deleteserversview(interaction.guild.id))
