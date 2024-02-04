@@ -17,7 +17,7 @@ from config import client
 import pymongo
 
 from functions.servers import check_server_credentials, grab_server_info
-from views.servers import statusserversview, deleteserversview
+from views.servers import statusserversview, deleteserversview, select_servers_view
 db = client.servers
 
 
@@ -116,9 +116,22 @@ class servers(commands.Cog):
           await interaction.followup.send(embed=embedutil("error",traceback.format_exc()))
 
 
-    @server_cmd.command(name="panel",description="Send a server panel where members can easily")
-    async def panel(self, interaction: discord.Interaction, channel: discord.TextChannel):
-       pass
+    #@server_cmd.command(name="panel",description="Send a server panel where members can easily")
+    #async def panel(self, interaction: discord.Interaction, name: str, description: str, channel: discord.TextChannel):
+    #  if not interaction.permissions.manage_guild:
+    #    await interaction.response.send_message(embed=embedutil("servers","selectservers"),ephemeral=True)
+    #    return
+    #  
+    #  await interaction.response.defer(ephemeral=True)
+    #  try:
+    #
+    #    if channel == None:
+    #       channel = interaction.channel
+    #
+    #    await interaction.followup.send(embed=embedutil("servers","selectservers"),view=select_servers_view(interaction.guild.id,name,description,channel))
+    #  
+    #  except Exception:
+    #     await interaction.followup.send(embed=embedutil("error",traceback.format_exc()))
 
 
 async def setup(bot):

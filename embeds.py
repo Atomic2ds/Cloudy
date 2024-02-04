@@ -20,6 +20,10 @@ def embedutil(category, content):
          embed = discord.Embed(colour=0x4c7fff, title="Linked Server Deleter",description="Select as many servers as you want from the dropdown menu below and we will remove them from your server list")
          embed.set_footer(text="This module is in beta, report any bugs to our support server")
          embed.add_field(name="Social Links",value=libraries.SOCIAL_LINKS,inline=False)
+        elif content == "selectservers":
+         embed = discord.Embed(colour=0x4c7fff, title="Select Servers",description="Choose servers to put on your server panel, using the dropdown menu below")
+         embed.set_footer(text="This module is in beta, report any bugs to our support server")
+         embed.add_field(name="Social Links",value=libraries.SOCIAL_LINKS,inline=False)
 
     if category == "smp":
         
@@ -33,6 +37,11 @@ def embedutil(category, content):
         else:
             description="Click the buttons below to view information about the currently linked smp and also current running status and stats like cpu usage, memory usage and disk usage"
 
+        embed = discord.Embed(colour=0x4c7fff, title=title, description=description)
+
+    if category == "serverpanel":
+        title = content[0]
+        description = content[1]
         embed = discord.Embed(colour=0x4c7fff, title=title, description=description)
 
     if category == "img2text":
