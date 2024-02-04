@@ -20,7 +20,7 @@ services:
     container_name: cloudy-mongodb
     volumes:
       - mongodb_data:/data/db
-    expose:
+    ports:
       - "30312:27017"
 
 
