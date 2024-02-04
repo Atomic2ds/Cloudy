@@ -81,7 +81,7 @@ class serverstatusview(discord.ui.View):
   def __init__(self, label: str):
      self.label = label
      super().__init__(timeout=None)
-     self.add_item(discord.ui.Button(label=self.label,style=discord.ButtonStyle.gray, disabled=True))
+     #self.add_item(discord.ui.Button(label=self.label,style=discord.ButtonStyle.gray, disabled=True))
 
   @discord.ui.button(label="Go Back", style=discord.ButtonStyle.gray, custom_id="gobacktoserverlist")
   async def gobacktostatuslist(self, interaction: discord.Interaction, button: discord.ui.Button):
@@ -199,40 +199,42 @@ class selectserversdropdown(discord.ui.Select):
     #await interaction.followup.send(embed=embedutil("success","Successfully deleted your selected server(s) off the system"),ephemeral=True)
     #await interaction.followup.edit_message(message_id=interaction.message.id,view=deleteserversview(interaction.guild.id))
      max_values = db.list.count_documents({"guild_id": interaction.guild.id})
-     print(self.values)
+     #print(self.values)
      values = []
      for server in self.values:
-      for document in db.list.find({"guild_id": self.guild_id,}):
+      for document in db.list.find({"guild_id": self.guild_id,"name":server}):
         name = document["name"]
         description = document["description"]
       values.append(discord.SelectOption(label=name, description=description))
+
+     #print(values)
         
-     await self.channel.send(embed=embedutil("serverpanel",(self.guild_id,self.name,self.description)),view=server_panel_view(values,max_values,name,description))
+     await self.channel.send(embed=embedutil("serverpanel",(self.name,self.description)),view=server_panel_view(values,max_values))
 
 
    except Exception:
      await interaction.followup.send(embed=embedutil("error",traceback.format_exc()),ephemeral=True)
 
 
+
 class server_panel_view(discord.ui.View):
-   def __init__(self, options, max_values, name: str, description: str):
+   def __init__(self, options, max_values):
       super().__init__(timeout=None)
-      self.add_item(serverpanel(options,max_values,name,description))
+      self.add_item(serverpanel(options,max_values))
+
 
 class serverpanel(discord.ui.Select):
-  def __init__(self, options, max_values, name: str, description: str):
-    self.name = name
-    self.description = description
+  def __init__(self, options, max_values):
 
-    super().__init__(placeholder="Select a server...", options=options, min_values=1, max_values=max_values, custom_id="deleteserversdropdown")
+    super().__init__(placeholder="Select a server...", options=options, custom_id="serverpaneldropdwon")
 
   async def callback(self, interaction: discord.Interaction):
    await interaction.response.defer()
    try:
-      
-    #await interaction.followup.send(embed=embedutil("success","Successfully deleted your selected server(s) off the system"),ephemeral=True)
-    #await interaction.followup.edit_message(message_id=interaction.message.id,view=deleteserversview(interaction.guild.id))
-     await self.channel.send(embed=embedutil("serverpanel",(self.name,self.description)))
+    data = await server_info_embed(self.values[0],interaction.guild.id)
+    embed = data[0]
+
+    await interaction.followup.send(embed=embed,ephemeral=True)
 
 
    except Exception:
