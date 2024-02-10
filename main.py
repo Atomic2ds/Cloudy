@@ -25,7 +25,6 @@ from views.utilities import avatarview
 from views.core import welcomeview
 import aioschedule
 from embeds import embedutil
-from monitor import uptime_ping
 
 console = Console()
 
