@@ -134,6 +134,11 @@ class servers(commands.Cog):
       except Exception:
          await interaction.followup.send(embed=embedutil("error",traceback.format_exc()))
 
+    @server_cmd.command(name="attach-info",description="Allows you to attach a little info panel to your linked server")
+    @app_commands.describe(title="The title of your server info embed that will show to users",description="The description of the server info embed that wil show to users",image="The big image that attaches to the bottom of your info embed to end users (Enter a URL)")
+    async def attach_info(self, interaction: discord.Interaction, title: str, description: str, image: str):
+       await interaction.response.send_message(embed=embedutil("denied","This feature is a work in progress"),ephemeral=True)
+
 
 async def setup(bot):
     await bot.add_cog(servers(bot))

@@ -94,6 +94,9 @@ class serverstatusview(discord.ui.View):
        except Exception:
           await interaction.followup.send(embed=embedutil("error",traceback.format_exc()))
 
+  @discord.ui.button(label="Extra Server Info", style=discord.ButtonStyle.gray, custom_id="viewserverextrainfo")
+  async def viewserverextrainfo(self, interaction: discord.Interaction, button: discord.ui.Button):
+       pass
 
 
 
@@ -154,14 +157,15 @@ class deleteserversdropdown(discord.ui.Select):
 class select_servers_view(discord.ui.View):
    def __init__(self, guild_id: str, name: str, description: str, channel):
       super().__init__(timeout=None)
-      self.add_item(selectserversdropdown(guild_id,name,description,channel))
+      self.add_item(selectserversdropdown(guild_id,name,description,channel,None))
 
 class selectserversdropdown(discord.ui.Select):
-  def __init__(self, guild_id: str, name: str, description: str, channel):
+  def __init__(self, guild_id: str, name: str, description: str, channel,type: str):
     self.name = name
     self.guild_id = guild_id
     self.description = description
     self.channel = channel
+    self.type = type
     options = []
 
     for document in db.list.find({"guild_id": self.guild_id,}):
@@ -196,6 +200,7 @@ class selectserversdropdown(discord.ui.Select):
       return
    await interaction.response.defer()
    try:
+     
     #await interaction.followup.send(embed=embedutil("success","Successfully deleted your selected server(s) off the system"),ephemeral=True)
     #await interaction.followup.edit_message(message_id=interaction.message.id,view=deleteserversview(interaction.guild.id))
      max_values = db.list.count_documents({"guild_id": interaction.guild.id})
