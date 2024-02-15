@@ -40,7 +40,7 @@ except:
 
 if TESTING == "false":
     #client = pymongo.MongoClient("mongodb://mongodb/")
-    client = pymongo.MongoClient("mongodb://YUoVx6UyLboFKA4bpvjPEFnQJqQcbXQYnhdsLTPzYVhxkokNLF7hduW4Lw:tfNLdxNRCdBer5bodoM8TJQazBqrrKLC3ZVPG2qFN67o8Tgz4bC8UMeYnd@45.11.229.137:8003/")
+    client = pymongo.MongoClient("mongodb://YUoVx6UyLboFKA4bpvjPEFnQJqQcbXQYnhdsLTPzYVhxkokNLF7hduW4Lw:tfNLdxNRCdBer5bodoM8TJQazBqrrKLC3ZVPG2qFN67o8Tgz4bC8UMeYnd@bot2.cloud.a3d.pro:8002/")
     #client = pymongo.MongoClient("mongodb://gX4Sn6NM47HzQTpqfHzWVet4VTyAct8s5N:3oC7q4sPKfsPJU32pRgdGbFEvEAKi6bopYWtXTfqQiNYLokeMFKgZtyQP5SixPSsAuoW@45.11.229.137:8002/")
 else:
     client = pymongo.MongoClient("mongodb://yyX7BeyVoUguQAX69gP6UxrHkXKKtAEdV:ZZFA97mvqYU5s5WhANnPaaPw7LrotjWP8@140.238.206.46:25623/")
