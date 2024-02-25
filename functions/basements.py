@@ -21,6 +21,10 @@ async def sell_basement_item_function(interaction, name, value, ephemeral):
                 await interaction.followup.send(embed=embedutil("denied",f"That person is already up for sale!"),ephemeral=ephemeral)
                 return
             
+            if not db.basements.find_one({"id":interaction.user.id,"name":name}):
+                await interaction.followup.send(embed=embedutil("denied",f"Couldn't find someone in your basement with that name"),ephemeral=ephemeral)
+                return
+
             document = db.basements.find_one({"id":interaction.user.id,"name":name})
             description = document["description"]
             db.basements.delete_many({"name": name,"id":interaction.user.id})
@@ -29,3 +33,8 @@ async def sell_basement_item_function(interaction, name, value, ephemeral):
             await interaction.followup.send(embed=embedutil("success",f"Successfully set {name} to be up for sale!"),ephemeral=ephemeral)
         except Exception:
             await interaction.followup.send(embed=embedutil("error",traceback.format_exc()))
+
+
+
+async def buy_basement_item_function(interaction,name,ephemeral):
+     await interaction.response.send_message(embed=embedutil("denied","This feature is a work in progress"),ephemeral=True)

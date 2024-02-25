@@ -12,7 +12,7 @@ from views.core import infoview
 import libraries
 from discord import ui
 
-from functions.basements import sell_basement_item_function
+from functions.basements import sell_basement_item_function, buy_basement_item_function
 
 class storeview(discord.ui.View):
    def __init__(self):
@@ -20,7 +20,7 @@ class storeview(discord.ui.View):
 
    @discord.ui.button(label="Buy Item", style=discord.ButtonStyle.gray, custom_id="buy_item_basements")
    async def buy_basement_item(self, interaction: discord.Interaction, button: discord.ui.Button):
-      await interaction.response.send_message(embed=embedutil("denied","This feature is still a work in progress"),ephemeral=True)
+      await interaction.response.send_modal(buy_item())
 
    @discord.ui.button(label="Sell Item", style=discord.ButtonStyle.gray, custom_id="sell_item_basements")
    async def sell_basement_item(self, interaction: discord.Interaction, button: discord.ui.Button):
@@ -34,3 +34,10 @@ class sell_item(ui.Modal, title="Sell Basement Item"):
 
     async def on_submit(self, interaction: discord.Interaction):
      await sell_basement_item_function(interaction, str(self.name), str(self.value), True)
+
+class buy_item(ui.Modal, title="Buy Basement Item"):
+
+    name = ui.TextInput(label="Item Name", placeholder="The name of something you want to buy from the store", style=discord.TextStyle.short, required=True)
+
+    async def on_submit(self, interaction: discord.Interaction):
+      await buy_basement_item_function(interaction, str(self.name), True)

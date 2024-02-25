@@ -37,6 +37,12 @@ async def process_ows(msg):
             except:
               pass
 
+            if len(old_story) < 2048 and len(words) > 2048:
+              await msg.channel.send(embed=embedutil("ows","halfway-warning"),view=infoview("Automated message"))
+
+            if len(old_story) < 4000 and len(words) > 4000:
+                await msg.channel.send(embed=embedutil("ows","nearly-at-limit"),view=infoview("Automated message"))
+
             if len(msg.content) > 45:
               await msg.delete()
               try:
@@ -79,12 +85,14 @@ async def process_ows(msg):
                 client.fun.ows.update_one({"guild_id": msg.guild.id},{"$set": {"last_author": msg.author.id}})
                 if client.fun.ows.find_one({"guild_id": msg.guild.id}):
                   client.fun.ows.update_one({ "guild_id": msg.guild.id },{ "$push": { "words": msg.content } })
+                if not client.fun.wallets.find_one({"user": msg.author.id}):
+                  client.fun.wallets.insert_one({"user": msg.author.id, "value": 0})
 
-                if len(old_story) < 2048 and len(words) > 2048:
-                 await msg.channel.send(embed=embedutil("ows","halfway-warning"),view=infoview("Automated message"))
+                document = client.fun.wallets.find_one({"user":  msg.author.id})
+                balance = document["value"]
+                balance = balance + 1
+                client.fun.wallets.update_one({"user": msg.author.id},{"$set": {"value": balance}})
 
-                if len(old_story) < 4000 and len(words) > 4000:
-                 await msg.channel.send(embed=embedutil("ows","nearly-at-limit"),view=infoview("Automated message"))
 
 
 # -- Publishing one word stories -- 

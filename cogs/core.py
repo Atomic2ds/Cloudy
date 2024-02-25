@@ -58,7 +58,10 @@ class core(commands.Cog):
              channel_id = document["channel_id"]
              channel = self.bot.get_channel(channel_id)
              await channel.send(embed=embedutil("simple",msg),view=notify_buttons())
+         except:
+           pass
 
+         try:
           cursor = client.images.config.find({"guild_id":guild.id})
           for document in cursor:
            status = document["status"]
@@ -67,6 +70,22 @@ class core(commands.Cog):
               channel_id = document["channel_id"]
               channel = self.bot.get_channel(channel_id)
               await channel.send(embed=embedutil("simple",msg),view=notify_buttons())
+         except:
+           pass
+
+         try:
+          cursor = client.fact.config.find({"guild_id": guild.id,})
+          for document in cursor:
+            channel = document["channel_id"]
+            channel = self.bot.get_channel(channel)
+            await channel.send(embed=embedutil("simple",msg),view=notify_buttons())
+         except:
+           pass
+
+         try:
+          for document in db.art.find({"guild_id": guild.id}):
+             submissions_channel = await self.bot.fetch_channel(document["submissions_channel"])
+             await channel.send(embed=embedutil("simple",msg),view=notify_buttons())
          except:
            pass
 

@@ -15,7 +15,7 @@ import datetime
 from embeds import embedutil
 from config import client
 
-from functions.basements import sell_basement_item_function
+from functions.basements import sell_basement_item_function, buy_basement_item_function
 from views.basements import storeview
 
 db = client.fun
@@ -76,7 +76,7 @@ class basements(commands.Cog):
     @basement_cmd.command(name="sell", description="Sell someone from your basement")
     @app_commands.describe(name="The name of the person to sell from your basement",value="How much you want to sell your item for")
     async def sell(self, interaction: discord.Interaction, name: str, value: int):
-        await sell_basement_item_function(interaction, str(self.name), str(self.value), False)
+        await sell_basement_item_function(interaction, str(name), str(value), False)
 
     #Remove something from the basement store
     @basement_cmd.command(name="unsell", description="Remove something from the Cloudy basement store")
@@ -117,8 +117,9 @@ class basements(commands.Cog):
             await interaction.followup.send(embed=embedutil("error",traceback.format_exc()))
 
     @basement_cmd.command(name="buy",description="Buy something from the basement store")
+    @app_commands.describe(name="The name of the person to buy from the store")
     async def buy(self, interaction: discord.Interaction, name: str):
-        await interaction.response.send_message(embed=embedutil("denied","This feature is still a work in progress"),ephemeral=True)
+        await buy_basement_item_function(interaction,name,False)
 
 
 async def setup(bot):
