@@ -39,12 +39,9 @@ except:
     TESTING = "true"
 
 if TESTING == "false":
-    #client = pymongo.MongoClient("mongodb://mongodb/")
-    client = pymongo.MongoClient("mongodb://YUoVx6UyLboFKA4bpvjPEFnQJqQcbXQYnhdsLTPzYVhxkokNLF7hduW4Lw:tfNLdxNRCdBer5bodoM8TJQazBqrrKLC3ZVPG2qFN67o8Tgz4bC8UMeYnd@syd-game-03.cloud.a3d.pro:25617/")
-    #client = pymongo.MongoClient("mongodb://gX4Sn6NM47HzQTpqfHzWVet4VTyAct8s5N:3oC7q4sPKfsPJU32pRgdGbFEvEAKi6bopYWtXTfqQiNYLokeMFKgZtyQP5SixPSsAuoW@45.11.229.137:8002/")
+    client = pymongo.MongoClient("mongodb+srv://Dggcwv2mRniLGSoc6LoYWkRsTrf3JUWWPqjVGZjDgBnW5wG:FERwdeKPFiRWpCCgetaD4GouQMseXiZxhyMZPHuyZyGeiJS@cloudy.muprhys.mongodb.net/?retryWrites=true&w=majority&appName=Cloudy")
 else:
     client = pymongo.MongoClient("mongodb://yyX7BeyVoUguQAX69gP6UxrHkXKKtAEdV:ZZFA97mvqYU5s5WhANnPaaPw7LrotjWP8@140.238.206.46:25623/")
-    #client = pymongo.MongoClient("mongodb://gX4Sn6NM47HzQTpqfHzWVet4VTyAct8s5N:3oC7q4sPKfsPJU32pRgdGbFEvEAKi6bopYWtXTfqQiNYLokeMFKgZtyQP5SixPSsAuoW@45.11.229.137:8002/")
 
 try:
     TOKEN = os.environ["TOKEN"]
