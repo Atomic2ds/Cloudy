@@ -39,7 +39,7 @@ except:
     TESTING = "true"
 
 if TESTING == "false":
-    client = pymongo.MongoClient("mongodb+srv://Dggcwv2mRniLGSoc6LoYWkRsTrf3JUWWPqjVGZjDgBnW5wG:FERwdeKPFiRWpCCgetaD4GouQMseXiZxhyMZPHuyZyGeiJS@cloudy.muprhys.mongodb.net/?retryWrites=true&w=majority&appName=Cloudy")
+    client = pymongo.MongoClient("mongodb://vyD4TmsB7tWvwoogAkzDbWY:PJsFqnt3QPJFBqMJFUVkswjaGMZUAeu6x2wGq72qLLZTXfHgzQbQFJ8To3t8@mongodb/")
 else:
     client = pymongo.MongoClient("mongodb://yyX7BeyVoUguQAX69gP6UxrHkXKKtAEdV:ZZFA97mvqYU5s5WhANnPaaPw7LrotjWP8@140.238.206.46:25623/")
 
@@ -55,5 +55,4 @@ PEXELS_API = "LUou1G0GPKICgLpylPXedl2akKv08RNHwS435x9TB2NDBnkvh8CYwgjk"
 
 # Testing Bot Tokens
 TESTING1 = "MTA5NTI5MDkyMDM1MTU3MjA0OQ.GLQ2Zn.Fvqf1s12xo9n6sVkzh1My90ntfDyX9MC8UkO0k"
-#TESTING1 = "MTE4NDA1MzMzODc0OTI4ODQ1OQ.GKdjzE.XHmVI_KrN4oY4o-f6wFpy2TXcL5kSc1iQAvRj8"
 TESTING2 = "MTA5NjM1MzE2NDM4NDU1MDk2Mg.G-tdcF.DS9Y3umu78EFifKykQHpXwbXyFSifa0Tm2pVIM"

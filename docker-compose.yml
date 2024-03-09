@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+
+  # The main discord.py bot container
+  bot:
+    restart: always
+    build: .
+    container_name: cloudy_bot
+    depends_on:
+      - mongodb
+
+  #The main database cloudy uses for data storage
+  mongodb:
+    restart: always
+    image: mongo:latest
+    container_name: cloudy_mongodb
+    volumes:
+      - mongodb_data:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=vyD4TmsB7tWvwoogAkzDbWY
+      - MONGO_INITDB_ROOT_PASSWORD=PJsFqnt3QPJFBqMJFUVkswjaGMZUAeu6x2wGq72qLLZTXfHgzQbQFJ8To3t8
+    ports:
+      - "39231:27017"
+
+
+volumes:
+  mongodb_data:
