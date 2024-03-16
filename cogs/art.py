@@ -18,6 +18,7 @@ from config import client
 import pymongo
 from views.art import submission_buttons
 from functions.core import requestedby
+from functions.art import upload_art_image
 
 db = client.fun
 
@@ -127,17 +128,19 @@ class art(commands.Cog):
           if db.art_submissions.count_documents({"art_author": interaction.user.id,"guild_id":interaction.guild.id}) == 2:
               await interaction.followup.send(embed=embedutil("denied","You have reached the limit on how many art submissions you can have open at once on this server! (2)"),ephemeral=True)
               return
+          
+          cloudy_image_url = await upload_art_image(image.url)
 
           embed = discord.Embed(colour=0x4c7fff, title=name, description=description)
           embed.set_footer(text="Submitted by " + interaction.user.name.capitalize(), icon_url=interaction.user.avatar)
-          embed.set_image(url=image.url)
+          embed.set_image(url=cloudy_image_url)
 
           for document in db.art.find({"guild_id": interaction.guild.id}):
              submissions_channel = await self.bot.fetch_channel(document["submissions_channel"])
           submission_message = await submissions_channel.send(embed=embed,view=submission_buttons())
 
           await interaction.followup.send(embed=embedutil("success","Successfully submitted your art for review"))
-          db.art_submissions.insert_one({"guild_id": interaction.guild.id,"message_id":submission_message.id,"image_url":image.url,"art_name":name,"art_description":description,"art_author":interaction.user.id})
+          db.art_submissions.insert_one({"guild_id": interaction.guild.id,"message_id":submission_message.id,"image_url":cloudy_image_url,"art_name":name,"art_description":description,"art_author":interaction.user.id})
 
           try:  
             await interaction.user.send(embed=embedutil("simple","You will recieve a dm from me when your art submission is either approved or denied, if you want to setup the Cloudy art module on your own server [click here](https://top.gg/bot/1090917174991933540)"))
