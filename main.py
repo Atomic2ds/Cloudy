@@ -25,6 +25,7 @@ from views.utilities import avatarview
 from views.core import welcomeview
 import aioschedule
 from embeds import embedutil
+from functions.quotes import handle_quote_save
 
 console = Console()
 
@@ -79,38 +80,9 @@ async def on_ready():
     await asyncio.sleep(5)
 
 
-@bot.tree.context_menu(name="Fetch image")
-async def fetch_image_context(interaction: discord.Interaction, msg: discord.Message):
-  await interaction.response.defer()
-  response = await img2text(msg.content)
-  await interaction.followup.send(embed=response,view=hyperlink_button(msg.jump_url,"Source Message"))
-
-@bot.tree.context_menu(name="Fetch gif")
-async def fetch_gif_context(interaction: discord.Interaction, msg: discord.Message):
-  try:
-   await interaction.response.defer()
-   embed = await fetch_gif(msg.content)
-   await interaction.followup.send(embed=embed,view=hyperlink_button(msg.jump_url,"Source Message"))
-  except Exception:
-    await interaction.followup.send(embed=embedutil("error",traceback.format_exc()))
-
-@bot.tree.context_menu(name="Define term")
-async def define_term_context(interaction: discord.Interaction, msg: discord.Message):
-  try:
-   await interaction.response.defer()
-   embed = await get_definition(msg.content)
-   await interaction.followup.send(embed=embed,view=hyperlink_button(msg.jump_url,"Source Message"))
-  except Exception:
-    await interaction.followup.send(embed=embedutil("error",traceback.format_exc()))
-
-@bot.tree.context_menu(name="Get avatar")
-async def get_avatar_context(interaction: discord.Interaction, user: discord.User):
-  try:
-    await interaction.response.defer()
-    response = await get_avatar(user)
-    await interaction.followup.send(embed=response,view=avatarview(user))
-  except Exception:
-    await interaction.followup.send(embed=embedutil("error",traceback.format_exc()))
+@bot.tree.context_menu(name="Save as Quote")
+async def save_as_quote(interaction: discord.Interaction, msg: discord.Message):
+  await handle_quote_save(msg,interaction)
 
 
 @bot.event

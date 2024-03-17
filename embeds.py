@@ -134,6 +134,11 @@ def embedutil(category, content):
             embed = discord.Embed(colour=0x4c7fff, title="Channel Purged", description=f"The one word story channel was just purged having {content[1]} message(s) purged from the channel and the story, if anything is missing thats why")
             embed.add_field(name="Social Links",value=libraries.SOCIAL_LINKS,inline=False)
 
+    if category == "quotes":
+        if content == "configured":
+            embed = discord.Embed(colour=0x4c7fff, title="Quotes channel has been configured", description=f"This channel has been set as the place for saved quotes to be sent, you can save a quote by right clicking a message then going to apps. After that click on 'Save As Quote' then it will be sent to this channel. Have fun with it!")
+            embed.add_field(name="Social Links",value=libraries.SOCIAL_LINKS,inline=False)
+
 
     if category == "8ball":
         embed = discord.Embed(colour=0x4c7fff, title="Magic 8 Ball")
