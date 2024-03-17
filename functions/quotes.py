@@ -24,7 +24,7 @@ async def handle_quote_save(msg: discord.Message, interaction: discord.Interacti
   channel_id = int(document["channel_id"])
   channel = bot.get_channel(channel_id)
 
-  await channel.send(embed=embed,view=hyperlink_button(msg.jump_url,"Original"))
+  await channel.send(embed=embed)#,view=hyperlink_button(msg.jump_url,"Original"))
   await interaction.response.send_message(embed=embedutil("success","Successfully saved your requested quote"),ephemeral=True)
  except Exception:
   await interaction.response.send_message(embed=embedutil("error",traceback.format_exc()),ephemeral=True)
