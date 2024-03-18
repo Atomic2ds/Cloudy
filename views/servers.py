@@ -157,15 +157,14 @@ class deleteserversdropdown(discord.ui.Select):
 class select_servers_view(discord.ui.View):
    def __init__(self, guild_id: str, name: str, description: str, channel):
       super().__init__(timeout=None)
-      self.add_item(selectserversdropdown(guild_id,name,description,channel,None))
+      self.add_item(selectserversdropdown(guild_id,name,description,channel))
 
 class selectserversdropdown(discord.ui.Select):
-  def __init__(self, guild_id: str, name: str, description: str, channel,type: str):
+  def __init__(self, guild_id: str, name: str, description: str, channel):
     self.name = name
     self.guild_id = guild_id
     self.description = description
     self.channel = channel
-    self.type = type
     options = []
 
     for document in db.list.find({"guild_id": self.guild_id,}):
