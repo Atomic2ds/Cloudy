@@ -1,9 +1,6 @@
 # Cloudy Bot
 My attempt at building a sleek, responsive and feature packed multipurpose discord bot
 
-> [!NOTE]
-> Development is handled by just 1 Australian high school student, expect it to be slow
-
 ## Links
 - ### [🚀 Project Tracker](https://trello.com/b/ED1yTBL0/cloudy-bot): Includes ideas, to-do, in progress, on hold and completed
 - ### [🌏 Top.gg Page](https://top.gg/bot/1090917174991933540): The page to add Cloudy to your server, vote for it & more
