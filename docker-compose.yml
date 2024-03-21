@@ -17,11 +17,11 @@ services:
     container_name: cloudy_mongodb
     volumes:
       - mongodb_data:/data/db
-    environment:
-      - MONGO_INITDB_ROOT_USERNAME=vyD4TmsB7tWvwoogAkzDbWY
-      - MONGO_INITDB_ROOT_PASSWORD=PJsFqnt3QPJFBqMJFUVkswjaGMZUAeu6x2wGq72qLLZTXfHgzQbQFJ8To3t8
-    ports:
-      - "39231:27017"
+    #environment:
+    #  - MONGO_INITDB_ROOT_USERNAME=YOUR_MONGO_USERNAME
+    #  - MONGO_INITDB_ROOT_PASSWORD=YOUR_MONGO_PASS
+    #ports:
+    #  - "39231:27017"
 
 
 volumes:
