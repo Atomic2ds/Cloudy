@@ -39,9 +39,9 @@ except:
     TESTING = "true"
 
 if TESTING == "false":
-    client = pymongo.MongoClient("mongodb://vyD4TmsB7tWvwoogAkzDbWY:PJsFqnt3QPJFBqMJFUVkswjaGMZUAeu6x2wGq72qLLZTXfHgzQbQFJ8To3t8@mongodb/")
+    client = pymongo.MongoClient("mongodb://mongodb/")
 else:
-    client = pymongo.MongoClient("mongodb://yyX7BeyVoUguQAX69gP6UxrHkXKKtAEdV:ZZFA97mvqYU5s5WhANnPaaPw7LrotjWP8@140.238.206.46:25623/")
+    client = pymongo.MongoClient(os.environ["TESTING_MONGO_INSTANCE"])
 
 try:
     TOKEN = os.environ["TOKEN"]
@@ -49,11 +49,10 @@ except:
     TOKEN = None
 
 #API Keys
-IMGUR_API = "46beb6aef663a4f"
-GIPHY_KEY = "IXND99OPhaatCVy98tmefJkydzIkGG7x"
-PEXELS_API = "LUou1G0GPKICgLpylPXedl2akKv08RNHwS435x9TB2NDBnkvh8CYwgjk"
-MEDIA_AUTH_KEY = "oK2MAwQJujz3CGCBZWZ4UrYRT5bVjV"
+GIPHY_KEY = os.environ["GIPHY_KEY"]
+PEXELS_API =  os.environ["PEXELS_API"]
+MEDIA_AUTH_KEY = os.environ["MEDIA_AUTH_KEY"]
 
 # Testing Bot Tokens
-TESTING1 = "MTA5NTI5MDkyMDM1MTU3MjA0OQ.GPyKoT.l2zECS4m1yEXroSvB0W6uVx2B3gQ_JnNoplYkY"
-TESTING2 = "MTA5NjM1MzE2NDM4NDU1MDk2Mg.G-tdcF.DS9Y3umu78EFifKykQHpXwbXyFSifa0Tm2pVIM"
+TESTING1 = os.environ["TESTING1_TOKEN"]
+TESTING2 = os.environ["TESTING2_TOKEN"]
