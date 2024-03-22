@@ -21,7 +21,7 @@ You need to make a .env file for deploying the bot, copy it over from .env.examp
   ```
   cp .env.example .env
   ```
-Now simply just edit the 2 variables set, make sure to set TOKEN to your bot token
+Now simply just edit the variables set, make sure to set TOKEN to your bot token
 
 
 ### Deploying the stack
