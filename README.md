@@ -31,3 +31,7 @@ Make sure you have docker installed, docker is supported on pretty much every os
   ```
 Running that command will install the dependencies, create the containers, networks and volumes required. 
 
+## Optional Extensions
+These are other docker stacks you can use that integrate with Cloudy to provide a better experience
+### Cloudy Media
+This is a custom made media hosting server written in python using flask, you can deploy this, set the url in libraries.py and set the auth key. Find the repo [here](https://github.com/Atomic2ds/Cloudy-Media)
