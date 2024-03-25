@@ -5,4 +5,4 @@ gifs = ("https://tenor.com/view/klee-genshin-impact-gta5-gta-v-gta-online-gif-24
 
 
 
-MEDIA_URL = "https://cloudycdn.a3d.pro"
+MEDIA_URL = "https://cdn.a3d.pro"

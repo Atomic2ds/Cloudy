@@ -25,6 +25,6 @@ async def upload_art_image(image_url):
   response = requests.post(f"{libraries.MEDIA_URL}/upload", files=files, headers=headers)
   json_response = response.json()
   filename = json_response.get('filename')
-  response_url = f"{libraries.MEDIA_URL}/uploads/{filename}"
+  response_url = f"{libraries.MEDIA_URL}/api/uploads/{filename}"
 
   return response_url
