@@ -22,9 +22,9 @@ async def upload_art_image(image_url):
 
   files = {'file': open('./images/cache/art.jpg', 'rb')}
   headers = {'Authorization': f'Bearer {config.MEDIA_AUTH_KEY}'}
-  response = requests.post(f"{libraries.MEDIA_URL}/api/upload", files=files, headers=headers)
+  response = requests.post(f"{libraries.MEDIA_URL}/upload", files=files, headers=headers)
   json_response = response.json()
   filename = json_response.get('filename')
-  response_url = f"{libraries.MEDIA_URL}/api/uploads/{filename}"
+  response_url = f"{libraries.MEDIA_URL}/uploads/{filename}"
 
   return response_url
